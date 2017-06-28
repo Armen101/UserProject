@@ -1,6 +1,5 @@
 package com.example.student.userproject;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -8,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -17,7 +15,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, MapFragment.newInstance()).commit();
+                .replace(R.id.container, FavoriteFragment.newInstance()).commit();
 
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
