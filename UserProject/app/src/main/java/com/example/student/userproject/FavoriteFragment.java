@@ -2,8 +2,8 @@ package com.example.student.userproject;
 
 
 import android.os.Bundle;
-
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -21,8 +20,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +29,6 @@ public class FavoriteFragment extends Fragment {
 
 
     private DatabaseReference mDatabaseRef;
-    private StorageReference mStorageRef;
-    private FirebaseStorage mStor;
     private List<PhotographInfo> photograpsList;
     private RecyclerView recyclerView;
     private FirebaseDatabase mDtabase;
@@ -64,8 +59,7 @@ public class FavoriteFragment extends Fragment {
 
         mDtabase = FirebaseDatabase.getInstance();
         mDatabaseRef = mDtabase.getReference().child("photographs");
-        mStor = FirebaseStorage.getInstance();
-        mStorageRef = mStor.getReference().child("Photographs").child("avatar");
+        photograpsList = new ArrayList<>();
 
         favPhotograph();
 
@@ -81,9 +75,16 @@ public class FavoriteFragment extends Fragment {
                 new RecyclerViewHelper.RecyclerViewClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-//                        getActivity().getSupportFragmentManager()
-//                                .beginTransaction()
-//                                .replace(PhotographDetailInfoFragment.newInstance()).commit();
+
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("position", position);
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        PhotographDetailInfoFragment fr = new PhotographDetailInfoFragment();
+                        fr.setArguments(bundle);
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.container,fr)
+                                .addToBackStack(null)
+                                .commit();
                     }
 
                     @Override
@@ -137,17 +138,11 @@ public class FavoriteFragment extends Fragment {
             imgAvatar = (ImageView) view.findViewById(R.id.person_photo);
         }
 
-        public interface OnItemClickListener {
-
-            void onItemClick(PhotographInfo info);
-
-        }
-
     }
 
 
     private void favPhotograph() {
-        photograpsList = new ArrayList<>();
+
 
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
