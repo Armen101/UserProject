@@ -2,9 +2,12 @@ package com.example.student.userproject;
 
 
 import android.graphics.Color;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.arsy.maps_library.MapRipple;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -14,26 +17,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
-
-
-
-
-   private GoogleMap mMap;
+    private GoogleMap mMap;
     private MapRipple mapRipple;
 
     public static MapFragment newInstance() {
         return new MapFragment();
     }
-
 
     public MapFragment() {
 
@@ -57,6 +49,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
+        // TODO use d = sqrt((x2-x1)*(x2-x1) + (y2 -y1)(y2-y1)) formula to get users from nearly
+        // TODO R sharavixy = map-i radari  withDistance-i argument
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera

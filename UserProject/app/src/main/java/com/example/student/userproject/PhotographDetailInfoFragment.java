@@ -19,6 +19,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +42,6 @@ public class PhotographDetailInfoFragment extends Fragment {
     public PhotographDetailInfoFragment() {
     }
 
-
     public static PhotographDetailInfoFragment newInstance() {
         PhotographDetailInfoFragment fragment = new PhotographDetailInfoFragment();
         Bundle args = new Bundle();
@@ -51,8 +52,8 @@ public class PhotographDetailInfoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getArguments().getBundle("position");
-
+        // TODO  set information data to UI elements
+        PhotographInfo info = Parcels.unwrap(getArguments().getParcelable("info"));
     }
 
     @Override
@@ -65,7 +66,7 @@ public class PhotographDetailInfoFragment extends Fragment {
         detailList = new ArrayList<>();
 
         mDtabase = FirebaseDatabase.getInstance();
-        mDatabaseRef = mDtabase.getReference().child("photographs");
+        mDatabaseRef = mDtabase.getReference().child("photographs");  // TODO get specific fotograph images
 
 
         detailRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));

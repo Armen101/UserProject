@@ -2,15 +2,17 @@
 
 package com.example.student.userproject;
 
-public class PhotographInfo {
+import org.parceler.Parcel;
 
-    String name;
-    String phone;
-    String address;
-    String cameraInfo;
-    String imageUri;
-    String avatarUri;
+@Parcel
+class PhotographInfo {
 
+    private String name;
+    private String phone;
+    private String address;
+    private String cameraInfo;
+    private String imageUri;
+    private String avatarUri;
 
     public PhotographInfo() {
     }
@@ -34,10 +36,6 @@ public class PhotographInfo {
     }
 
     String imageName;
-
-
-
-
 
     public String getAddress() {
         return address;
