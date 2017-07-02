@@ -77,6 +77,7 @@ public class FavoriteFragment extends Fragment {
                     public void onClick(View view, int position) {
                         Bundle bundle = new Bundle();
                         bundle.putParcelable("info", Parcels.wrap(photograpsList.get(position)));
+
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         PhotographDetailInfoFragment fr = new PhotographDetailInfoFragment();
                         fr.setArguments(bundle);
@@ -88,6 +89,7 @@ public class FavoriteFragment extends Fragment {
 
                     @Override
                     public void onLongClick(View view, int position) {
+                        photograpsList.remove(position);
 
                     }
                 }));

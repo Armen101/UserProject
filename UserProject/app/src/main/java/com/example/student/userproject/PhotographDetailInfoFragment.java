@@ -38,22 +38,23 @@ public class PhotographDetailInfoFragment extends Fragment {
     private TextView detailPhone;
     private RecyclerView detailRecyclerView;
     private List<PhotographInfo> detailList;
+    private DatabaseReference mDatabaseGalleryRef;
+    private PhotographInfo info;
+    private String uid;
 
     public PhotographDetailInfoFragment() {
     }
 
     public static PhotographDetailInfoFragment newInstance() {
-        PhotographDetailInfoFragment fragment = new PhotographDetailInfoFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+        return new PhotographDetailInfoFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // TODO  set information data to UI elements
-        PhotographInfo info = Parcels.unwrap(getArguments().getParcelable("info"));
+        info = Parcels.unwrap(getArguments().getParcelable("info"));
+
     }
 
     @Override
@@ -63,20 +64,28 @@ public class PhotographDetailInfoFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_photograph_detail_info, container, false);
         findViewById(rootView);
 
+
         detailList = new ArrayList<>();
+
 
         mDtabase = FirebaseDatabase.getInstance();
         mDatabaseRef = mDtabase.getReference().child("photographs");  // TODO get specific fotograph images
+        mDatabaseGalleryRef = mDatabaseRef.child("gallery");
+
+        detailPhotographInfo();
 
 
         detailRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         detailRecyclerView.setHasFixedSize(true);
 
         onCreateFirebaseRecyclerAdapter(detailRecyclerView);
+
+
         return rootView;
     }
 
     private void findViewById(View rootView) {
+
         detailAvatar = (ImageView) rootView.findViewById(R.id.img_detail_avatar);
         detailName = (TextView) rootView.findViewById(R.id.tv_detail_name);
         detailAddress = (TextView) rootView.findViewById(R.id.tv_detail_address);
@@ -84,25 +93,26 @@ public class PhotographDetailInfoFragment extends Fragment {
         detailPhone = (TextView) rootView.findViewById(R.id.tv_detail_phone);
         detailRecyclerView = (RecyclerView) rootView.findViewById(R.id.detail_recyclerView);
 
-
     }
 
     private void onCreateFirebaseRecyclerAdapter(RecyclerView recyclerView) {
-        final FirebaseRecyclerAdapter<PhotographInfo, PhotographDetailInfoFragment.MyViewHolder> adapter = new FirebaseRecyclerAdapter<PhotographInfo,
-                PhotographDetailInfoFragment.MyViewHolder>(
+        final FirebaseRecyclerAdapter<PhotographInfo, MyViewHolder> adapter = new FirebaseRecyclerAdapter<PhotographInfo, MyViewHolder>(
                 PhotographInfo.class,
-                R.layout.detail_recycler_row_item,
-                PhotographDetailInfoFragment.MyViewHolder.class,
-                mDatabaseRef
+                R.layout.recycler_row_item,
+                MyViewHolder.class,
+                mDatabaseGalleryRef
 
         ) {
             @Override
-            protected void populateViewHolder(PhotographDetailInfoFragment.MyViewHolder viewHolder, PhotographInfo model, final int position) {
-                viewHolder.galleryImageName.setText(model.getImageName());
+            protected void populateViewHolder(MyViewHolder viewHolder, PhotographInfo model, final int position) {
+                viewHolder.galleryImageTitle.setText(model.getTitle());
+
 
                 Glide.with(getActivity())
                         .load(model.getImageUri())
                         .into(viewHolder.imgGallery);
+
+
                 detailList.add(model);
             }
         };
@@ -111,20 +121,19 @@ public class PhotographDetailInfoFragment extends Fragment {
 
     }
 
+
     private static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imgGallery;
-        TextView galleryImageName;
+        private ImageView imgGallery;
+        private TextView galleryImageTitle;
 
 
         public MyViewHolder(View view) {
             super(view);
-            galleryImageName = (TextView) view.findViewById(R.id.title_image_gallery);
+            galleryImageTitle = (TextView) view.findViewById(R.id.title_image_gallery);
             imgGallery = (ImageView) view.findViewById(R.id.gallery_img);
 
         }
-
-
     }
 
     private void detailPhotographInfo() {
@@ -135,22 +144,22 @@ public class PhotographDetailInfoFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot postSnepshot : dataSnapshot.getChildren()) {
-                    PhotographInfo info = postSnepshot.getValue(PhotographInfo.class);
+                    PhotographInfo inform = postSnepshot.getValue(PhotographInfo.class);
 
-                    String name = dataSnapshot.child("name").getValue(String.class);
-                    String address = dataSnapshot.child("address").getValue(String.class);
-                    String cameraInfo = dataSnapshot.child("cameraInfo").getValue(String.class);
-                    String phone = dataSnapshot.child("phone").getValue(String.class);
-                    detailName.setText(name);
-                    detailAddress.setText(address);
-                    detailCameraInfo.setText(cameraInfo);
-                    detailPhone.setText(phone);
+                    detailName.setText(info.getName());
+                    detailCameraInfo.setText(info.getCamera_info());
+                    detailPhone.setText(info.getPhone());
+                    detailAddress.setText(info.getAddress());
+                     uid =info.getUid();
 
 
-                    detailList.add(info);
+                    Glide.with(getActivity())
+                            .load(info.getAvatarUri())
+                            .into(detailAvatar);
+
+                    detailList.add(inform);
 
                 }
-
             }
 
             @Override

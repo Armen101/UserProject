@@ -10,58 +10,25 @@ class PhotographInfo {
     private String name;
     private String phone;
     private String address;
-    private String cameraInfo;
+    private String camera_info;
     private String imageUri;
     private String avatarUri;
+    private String title;
+    private String uid;
 
     public PhotographInfo() {
     }
 
-    public PhotographInfo(String name, String phone, String address, String cameraInfo, String imageUri, String avatarUri, String imageName) {
+    public PhotographInfo(String name, String phone, String address, String camera_info, String imageUri, String avatarUri, String title, String uid) {
         this.name = name;
         this.phone = phone;
         this.address = address;
-        this.cameraInfo = cameraInfo;
+        this.camera_info = camera_info;
         this.imageUri = imageUri;
         this.avatarUri = avatarUri;
-        this.imageName = imageName;
+        this.title = title;
+        this.uid = uid;
     }
-
-    public String getImageName() {
-        return imageName;
-    }
-
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
-    }
-
-    String imageName;
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getCameraInfo() {
-        return cameraInfo;
-    }
-
-    public void setCameraInfo(String cameraInfo) {
-        this.cameraInfo = cameraInfo;
-    }
-
-    public String getImageUri() {
-        return imageUri;
-    }
-
-    public void setImageUri(String imageUri) {
-        this.imageUri = imageUri;
-    }
-
-
 
     public String getName() {
         return name;
@@ -79,11 +46,51 @@ class PhotographInfo {
         this.phone = phone;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCamera_info() {
+        return camera_info;
+    }
+
+    public void setCamera_info(String camera_info) {
+        this.camera_info = camera_info;
+    }
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
+
     public String getAvatarUri() {
         return avatarUri;
     }
 
     public void setAvatarUri(String avatarUri) {
         this.avatarUri = avatarUri;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }
