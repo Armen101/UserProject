@@ -13,11 +13,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import org.parceler.Parcels;
 
@@ -60,19 +57,25 @@ public class PhotographDetailInfoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(R.layout.fragment_photograph_detail_info, container, false);
         findViewById(rootView);
 
-
         detailList = new ArrayList<>();
-
 
         mDtabase = FirebaseDatabase.getInstance();
         mDatabaseRef = mDtabase.getReference().child("photographs");  // TODO get specific fotograph images
         mDatabaseGalleryRef = mDatabaseRef.child("gallery");
 
-        detailPhotographInfo();
+        detailName.setText(info.getName());
+        detailCameraInfo.setText(info.getCamera_info());
+        detailPhone.setText(info.getPhone());
+        detailAddress.setText(info.getAddress());
+        uid =info.getUid();
+
+
+        Glide.with(getActivity())
+                .load(info.getAvatarUri())
+                .into(detailAvatar);
 
 
         detailRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
@@ -116,11 +119,8 @@ public class PhotographDetailInfoFragment extends Fragment {
                 detailList.add(model);
             }
         };
-
         recyclerView.setAdapter(adapter);
-
     }
-
 
     private static class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -134,38 +134,6 @@ public class PhotographDetailInfoFragment extends Fragment {
             imgGallery = (ImageView) view.findViewById(R.id.gallery_img);
 
         }
-    }
-
-    private void detailPhotographInfo() {
-
-
-        mDatabaseRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot postSnepshot : dataSnapshot.getChildren()) {
-                    PhotographInfo inform = postSnepshot.getValue(PhotographInfo.class);
-
-                    detailName.setText(info.getName());
-                    detailCameraInfo.setText(info.getCamera_info());
-                    detailPhone.setText(info.getPhone());
-                    detailAddress.setText(info.getAddress());
-                     uid =info.getUid();
-
-
-                    Glide.with(getActivity())
-                            .load(info.getAvatarUri())
-                            .into(detailAvatar);
-
-                    detailList.add(inform);
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-            }
-        });
     }
 
 }

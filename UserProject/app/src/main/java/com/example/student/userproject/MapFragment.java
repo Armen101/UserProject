@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,7 +94,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void allPhotographs() {
-
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -100,7 +102,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
                             android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     }
-                    PhotographInfo info = postSnepshot.getValue(PhotographInfo.class);
+                    final PhotographInfo info = postSnepshot.getValue(PhotographInfo.class);
                     location = new Location("provider");
                     double latitude = info.getLatitude();
                     double longitude = info.getLongitude();
@@ -113,8 +115,39 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     location.setLatitude(latitude);
                     location.setLongitude(longitude);
 
-                    if (location.distanceTo(mLocation) <= 5000) {
-                        mMap.addMarker(new MarkerOptions().position(latLng).title(info.getName()));
+                    if (location.distanceTo(mLocation) >= 5000) {
+                        Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(info.getName()));
+                        marker.setTag(info);
+                        // TODO add  avartars to the map like a marker
+                        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                            @Override
+                            public void onInfoWindowClick(Marker marker) {
+                                // TODO start detail fragment
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelable("info",  Parcels.wrap(marker.getTag()));
+                                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                PhotographDetailInfoFragment fr = new PhotographDetailInfoFragment();
+                                fr.setArguments(bundle);
+                                fragmentManager.beginTransaction()
+                                        .replace(R.id.container,fr)
+                                        .addToBackStack(null)
+                                        .commit();
+                            }
+                        });
+//                        Bitmap theBitmap = null;
+//                        try {
+//                            theBitmap = Glide.
+//                                    with(getActivity()).
+//                                    load(info.getAvatarUri()).
+//                                    asBitmap().
+//                                    into(100, 100). // Width and height
+//                                    get();
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        } catch (ExecutionException e) {
+//                            e.printStackTrace();
+//                        }
+//                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(theBitmap));
                     }
                     photograpsList.add(info);
                 }
