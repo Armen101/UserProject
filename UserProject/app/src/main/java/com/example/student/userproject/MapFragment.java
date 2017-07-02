@@ -6,7 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,10 +26,15 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.arsy.maps_library.MapRipple;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -83,7 +94,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootV= inflater.inflate(R.layout.fragment_map, container, false);
+        View rootV = inflater.inflate(R.layout.fragment_map, container, false);
         mDtabase = FirebaseDatabase.getInstance();
         mDatabaseRef = mDtabase.getReference().child("photographs");
         photograpsList = new ArrayList<>();
@@ -116,7 +127,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     location.setLongitude(longitude);
 
                     if (location.distanceTo(mLocation) >= 5000) {
-                        Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(info.getName()));
+                        final Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(info.getName()));
                         marker.setTag(info);
                         // TODO add  avartars to the map like a marker
                         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
@@ -124,30 +135,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             public void onInfoWindowClick(Marker marker) {
                                 // TODO start detail fragment
                                 Bundle bundle = new Bundle();
-                                bundle.putParcelable("info",  Parcels.wrap(marker.getTag()));
+                                bundle.putParcelable("info", Parcels.wrap(marker.getTag()));
                                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                                 PhotographDetailInfoFragment fr = new PhotographDetailInfoFragment();
                                 fr.setArguments(bundle);
                                 fragmentManager.beginTransaction()
-                                        .replace(R.id.container,fr)
+                                        .replace(R.id.container, fr)
                                         .addToBackStack(null)
                                         .commit();
                             }
                         });
-//                        Bitmap theBitmap = null;
-//                        try {
-//                            theBitmap = Glide.
-//                                    with(getActivity()).
-//                                    load(info.getAvatarUri()).
-//                                    asBitmap().
-//                                    into(100, 100). // Width and height
-//                                    get();
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        } catch (ExecutionException e) {
-//                            e.printStackTrace();
-//                        }
-//                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(theBitmap));
+                        Glide.with(getActivity())
+                                .load(info.getAvatarUri())
+                                .asBitmap()
+                                .fitCenter()
+                                .into(new SimpleTarget<Bitmap>() {
+                                    @Override
+                                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                        Bitmap bmp = Bitmap.createScaledBitmap(resource, 100, 100, false);
+                                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(bmp));
+                                    }
+                                });
                     }
                     photograpsList.add(info);
                 }
@@ -160,9 +168,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
-     public void onResume() {
+    public void onResume() {
         super.onResume();
-        if(mBroadcastReceiver == null) {
+        if (mBroadcastReceiver == null) {
             mBroadcastReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
@@ -180,9 +188,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         mapRipple.withNumberOfRipples(3);
                         mapRipple.withFillColor(Color.BLUE);
                         mapRipple.withStrokeColor(Color.BLACK);
-                        mapRipple.withStrokewidth(10);      // 10dp
-                        mapRipple.withDistance(5000);      // 2000 metres radius
-                        mapRipple.withRippleDuration(12000);    //12000ms
+                        mapRipple.withStrokewidth(10);
+                        mapRipple.withDistance(5000);
+                        mapRipple.withRippleDuration(12000);
                         mapRipple.withTransparency(0.5f);
                         mapRipple.startRippleMapAnimation();
                     }
@@ -208,7 +216,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(mBroadcastReceiver != null) {
+        if (mBroadcastReceiver != null) {
             getActivity().unregisterReceiver(mBroadcastReceiver);
         }
     }
