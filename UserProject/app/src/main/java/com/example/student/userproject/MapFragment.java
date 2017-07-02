@@ -1,7 +1,6 @@
 package com.example.student.userproject;
 
 
-import android.*;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -85,6 +84,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         LatLng currentPosition = new LatLng(currentLat, currentLng);
                         mMap.addMarker(new MarkerOptions().position(currentPosition).title("Marker in Sydney"));
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentPosition));
+                        mMap.animateCamera(CameraUpdateFactory.zoomTo(13), 2000, null);
                         mapRipple = new MapRipple(mMap, currentPosition, getActivity());
                         mapRipple.withNumberOfRipples(3);
                         mapRipple.withFillColor(Color.BLUE);
