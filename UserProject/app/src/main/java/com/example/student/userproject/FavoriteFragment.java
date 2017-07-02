@@ -147,10 +147,8 @@ public class FavoriteFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot postSnepshot : dataSnapshot.getChildren()) {
-                    PhotographInfo info = postSnepshot.getValue(PhotographInfo.class);
-
-
-                    photograpsList.add(info);
+//                    PhotographInfo info = postSnepshot.getValue(PhotographInfo.class);
+//                    photograpsList.add(info);
 
                 }
 

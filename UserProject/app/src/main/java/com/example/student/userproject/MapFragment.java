@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,16 +24,31 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
+    private DatabaseReference mDatabaseRef;
+    private List<PhotographInfo> photograpsList;
+    private FirebaseDatabase mDtabase;
     private GoogleMap mMap;
     private MapRipple mapRipple;
     private BroadcastReceiver mBroadcastReceiver;
     private double currentLat;
     private double currentLng;
+    private Location location;
+    private Location mLocation;
+    private Marker currentMarker;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -65,9 +81,49 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootV= inflater.inflate(R.layout.fragment_map, container, false);
+        mDtabase = FirebaseDatabase.getInstance();
+        mDatabaseRef = mDtabase.getReference().child("photographs");
+        photograpsList = new ArrayList<>();
         Intent i = new Intent(getActivity(), LocationService.class);
         getActivity().startService(i);
+
         return rootV;
+    }
+
+    private void allPhotographs() {
+
+        mDatabaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnepshot : dataSnapshot.getChildren()) {
+                    if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
+                            android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    }
+                    PhotographInfo info = postSnepshot.getValue(PhotographInfo.class);
+                    location = new Location("provider");
+                    double latitude = info.getLatitude();
+                    double longitude = info.getLongitude();
+                    LatLng latLng = new LatLng(latitude, longitude);
+
+                    mLocation = new Location("provider");
+                    mLocation.setLatitude(currentLat);
+                    mLocation.setLongitude(currentLng);
+
+                    location.setLatitude(latitude);
+                    location.setLongitude(longitude);
+
+                    if (location.distanceTo(mLocation) <= 5000) {
+                        mMap.addMarker(new MarkerOptions().position(latLng).title(info.getName()));
+                    }
+                    photograpsList.add(info);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+            }
+        });
     }
 
     @Override
@@ -80,9 +136,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     currentLat = (double) intent.getExtras().get("lat");
                     currentLng = (double) intent.getExtras().get("lng");
                     if (mMap != null) {
-                        mMap.clear();
+                        if (currentMarker != null) {
+                            currentMarker.remove();
+                        }
                         LatLng currentPosition = new LatLng(currentLat, currentLng);
-                        mMap.addMarker(new MarkerOptions().position(currentPosition).title("Marker in Sydney"));
+                        currentMarker = mMap.addMarker(new MarkerOptions().position(currentPosition).title("Marker in Sydney"));
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentPosition));
                         mMap.animateCamera(CameraUpdateFactory.zoomTo(13), 2000, null);
                         mapRipple = new MapRipple(mMap, currentPosition, getActivity());
@@ -90,7 +148,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         mapRipple.withFillColor(Color.BLUE);
                         mapRipple.withStrokeColor(Color.BLACK);
                         mapRipple.withStrokewidth(10);      // 10dp
-                        mapRipple.withDistance(2000);      // 2000 metres radius
+                        mapRipple.withDistance(5000);      // 2000 metres radius
                         mapRipple.withRippleDuration(12000);    //12000ms
                         mapRipple.withTransparency(0.5f);
                         mapRipple.startRippleMapAnimation();
@@ -110,10 +168,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        // TODO use d = sqrt((x2-x1)*(x2-x1) + (y2 -y1)(y2-y1)) formula to get users from nearly
-        // TODO R sharavixy = map-i radari  withDistance-i argument
+        allPhotographs();
         mMap = googleMap;
-        // Add a marker in Sydney and move the camera
     }
 
     @Override

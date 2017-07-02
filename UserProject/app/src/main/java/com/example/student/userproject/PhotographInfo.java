@@ -15,11 +15,15 @@ class PhotographInfo {
     private String avatarUri;
     private String title;
     private String uid;
+    private double latitude;
+    private double longitude;
 
     public PhotographInfo() {
     }
 
-    public PhotographInfo(String name, String phone, String address, String camera_info, String imageUri, String avatarUri, String title, String uid) {
+    public PhotographInfo(String name, String phone, String address, String camera_info,
+                          String imageUri, String avatarUri, String title, String uid,
+                          double latitude, double longitude) {
         this.name = name;
         this.phone = phone;
         this.address = address;
@@ -28,6 +32,8 @@ class PhotographInfo {
         this.avatarUri = avatarUri;
         this.title = title;
         this.uid = uid;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getName() {
@@ -92,5 +98,21 @@ class PhotographInfo {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }
