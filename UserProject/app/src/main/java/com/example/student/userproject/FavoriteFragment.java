@@ -56,19 +56,15 @@ public class FavoriteFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_favorite, container, false);
 
-
         mDtabase = FirebaseDatabase.getInstance();
         mDatabaseRef = mDtabase.getReference().child("photographs");
         photograpsList = new ArrayList<>();
-
-        favPhotograph();
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rv);
         LinearLayoutManager lm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(lm);
 
         recyclerView.setHasFixedSize(true);
-
 
         onCreateFirebaseRecyclerAdapter(recyclerView);
         recyclerView.addOnItemTouchListener(new RecyclerViewHelper(getActivity().getApplicationContext(), recyclerView,
@@ -137,29 +133,6 @@ public class FavoriteFragment extends Fragment {
         }
 
     }
-
-
-    private void favPhotograph() {
-
-
-        mDatabaseRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot postSnepshot : dataSnapshot.getChildren()) {
-//                    PhotographInfo info = postSnepshot.getValue(PhotographInfo.class);
-//                    photograpsList.add(info);
-
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-            }
-        });
-    }
-
 
 }
 

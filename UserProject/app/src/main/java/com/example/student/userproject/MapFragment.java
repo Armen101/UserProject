@@ -7,13 +7,17 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.icu.util.TimeUnit;
 import android.location.Location;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -46,9 +50,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.parceler.Parcels;
 
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
@@ -63,6 +70,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private Location location;
     private Location mLocation;
     private Marker currentMarker;
+    private Bitmap bmp;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -98,8 +106,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mDtabase = FirebaseDatabase.getInstance();
         mDatabaseRef = mDtabase.getReference().child("photographs");
         photograpsList = new ArrayList<>();
-        Intent i = new Intent(getActivity(), LocationService.class);
-        getActivity().startService(i);
 
         return rootV;
     }
@@ -109,15 +115,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnepshot : dataSnapshot.getChildren()) {
-                    if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
-                            != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
-                            android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    }
                     final PhotographInfo info = postSnepshot.getValue(PhotographInfo.class);
                     location = new Location("provider");
                     double latitude = info.getLatitude();
                     double longitude = info.getLongitude();
-                    LatLng latLng = new LatLng(latitude, longitude);
+                    final LatLng latLng = new LatLng(latitude, longitude);
 
                     mLocation = new Location("provider");
                     mLocation.setLatitude(currentLat);
@@ -127,6 +129,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     location.setLongitude(longitude);
 
                     if (location.distanceTo(mLocation) >= 5000) {
+
                         final Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(info.getName()));
                         marker.setTag(info);
                         // TODO add  avartars to the map like a marker
@@ -152,7 +155,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 .into(new SimpleTarget<Bitmap>() {
                                     @Override
                                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                        Bitmap bmp = Bitmap.createScaledBitmap(resource, 100, 100, false);
+                                        bmp = Bitmap.createScaledBitmap(resource, 80, 80, false);
                                         marker.setIcon(BitmapDescriptorFactory.fromBitmap(bmp));
                                     }
                                 });
@@ -167,9 +170,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    public void onResumeMap() {
         if (mBroadcastReceiver == null) {
             mBroadcastReceiver = new BroadcastReceiver() {
                 @Override
@@ -181,11 +182,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             currentMarker.remove();
                         }
                         LatLng currentPosition = new LatLng(currentLat, currentLng);
-                        currentMarker = mMap.addMarker(new MarkerOptions().position(currentPosition).title("Marker in Sydney"));
+                        currentMarker = mMap.addMarker(new MarkerOptions().position(currentPosition));
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentPosition));
                         mMap.animateCamera(CameraUpdateFactory.zoomTo(13), 2000, null);
                         mapRipple = new MapRipple(mMap, currentPosition, getActivity());
-                        mapRipple.withNumberOfRipples(3);
+                        mapRipple.withNumberOfRipples(1);
                         mapRipple.withFillColor(Color.BLUE);
                         mapRipple.withStrokeColor(Color.BLACK);
                         mapRipple.withStrokewidth(10);
@@ -196,6 +197,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     }
                 }
             };
+            allPhotographs();
         }
         getActivity().registerReceiver(mBroadcastReceiver, new IntentFilter("LOCATION_UPDATE"));
     }
@@ -209,8 +211,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        allPhotographs();
         mMap = googleMap;
+        onResumeMap();
     }
 
     @Override
@@ -219,6 +221,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (mBroadcastReceiver != null) {
             getActivity().unregisterReceiver(mBroadcastReceiver);
         }
+        Intent i = new Intent(getActivity(), LocationService.class);
+        getActivity().stopService(i);
     }
 
     @Override

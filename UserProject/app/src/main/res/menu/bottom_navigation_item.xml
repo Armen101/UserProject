@@ -6,7 +6,7 @@
         android:title="map" />
     <item
         android:id="@+id/action_config"
-        android:icon="@drawable/ic_settings_black_24dp"
-        android:title="config" />
+        android:icon="@drawable/ic_favorite_border_black_24dp"
+        android:title="favorite" />
 
 </menu>

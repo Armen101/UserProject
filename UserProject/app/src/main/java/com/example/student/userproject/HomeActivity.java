@@ -1,5 +1,6 @@
 package com.example.student.userproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -14,8 +15,12 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        Intent i = new Intent(this, LocationService.class);
+        startService(i);
+
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, FavoriteFragment.newInstance()).commit();
+                .replace(R.id.container, MapFragment.newInstance()).commit();
 
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
@@ -27,7 +32,7 @@ public class HomeActivity extends AppCompatActivity {
                 Fragment selectedFragment = null;
                 switch (item.getItemId()) {
                     case R.id.action_config: {
-                        selectedFragment = ConfigFragment.newInstance();
+                        selectedFragment = FavoriteFragment.newInstance();
                         break;
                     }
                     case R.id.action_map: {
