@@ -148,17 +148,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                         .commit();
                             }
                         });
-                        Glide.with(getActivity())
-                                .load(info.getAvatarUri())
-                                .asBitmap()
-                                .fitCenter()
-                                .into(new SimpleTarget<Bitmap>() {
-                                    @Override
-                                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                        bmp = Bitmap.createScaledBitmap(resource, 80, 80, false);
-                                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(bmp));
-                                    }
-                                });
+//                        Glide.with(getActivity())
+//                                .load(info.getAvatarUri())
+//                                .asBitmap()
+//                                .fitCenter()
+//                                .into(new SimpleTarget<Bitmap>() {
+//                                    @Override
+//                                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                                        bmp = Bitmap.createScaledBitmap(resource, 80, 80, false);
+//                                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(bmp));
+//                                    }
+//                                });
                     }
                     photograpsList.add(info);
                 }
@@ -197,8 +197,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     }
                 }
             };
-            allPhotographs();
         }
+        allPhotographs();
         getActivity().registerReceiver(mBroadcastReceiver, new IntentFilter("LOCATION_UPDATE"));
     }
 

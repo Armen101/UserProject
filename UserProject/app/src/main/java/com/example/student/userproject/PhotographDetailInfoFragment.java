@@ -1,6 +1,5 @@
 package com.example.student.userproject;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,13 +16,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.parceler.Parcels;
-
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class PhotographDetailInfoFragment extends Fragment {
-
 
     private FirebaseDatabase mDtabase;
     private DatabaseReference mDatabaseRef;
@@ -60,30 +56,25 @@ public class PhotographDetailInfoFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_photograph_detail_info, container, false);
         findViewById(rootView);
 
+
         detailList = new ArrayList<>();
-
-        mDtabase = FirebaseDatabase.getInstance();
-        mDatabaseRef = mDtabase.getReference().child("photographs");  // TODO get specific fotograph images
-        mDatabaseGalleryRef = mDatabaseRef.child("gallery");
-
         detailName.setText(info.getName());
         detailCameraInfo.setText(info.getCamera_info());
         detailPhone.setText(info.getPhone());
         detailAddress.setText(info.getAddress());
-        uid =info.getUid();
+        uid = info.getUid();
 
+        mDtabase = FirebaseDatabase.getInstance();
+        mDatabaseRef = mDtabase.getReference().child("photographs").child(uid);  // TODO get specific fotograph images
+        mDatabaseGalleryRef = mDatabaseRef.child("gallery");
 
         Glide.with(getActivity())
                 .load(info.getAvatarUri())
                 .into(detailAvatar);
 
-
         detailRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         detailRecyclerView.setHasFixedSize(true);
-
         onCreateFirebaseRecyclerAdapter(detailRecyclerView);
-
-
         return rootView;
     }
 
@@ -101,7 +92,7 @@ public class PhotographDetailInfoFragment extends Fragment {
     private void onCreateFirebaseRecyclerAdapter(RecyclerView recyclerView) {
         final FirebaseRecyclerAdapter<PhotographInfo, MyViewHolder> adapter = new FirebaseRecyclerAdapter<PhotographInfo, MyViewHolder>(
                 PhotographInfo.class,
-                R.layout.recycler_row_item,
+                R.layout.detail_recycler_row_item,
                 MyViewHolder.class,
                 mDatabaseGalleryRef
 
@@ -110,12 +101,9 @@ public class PhotographDetailInfoFragment extends Fragment {
             protected void populateViewHolder(MyViewHolder viewHolder, PhotographInfo model, final int position) {
                 viewHolder.galleryImageTitle.setText(model.getTitle());
 
-
                 Glide.with(getActivity())
                         .load(model.getImageUri())
                         .into(viewHolder.imgGallery);
-
-
                 detailList.add(model);
             }
         };
@@ -124,16 +112,13 @@ public class PhotographDetailInfoFragment extends Fragment {
 
     private static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView imgGallery;
-        private TextView galleryImageTitle;
-
+        private final ImageView imgGallery;
+        private final TextView galleryImageTitle;
 
         public MyViewHolder(View view) {
             super(view);
             galleryImageTitle = (TextView) view.findViewById(R.id.title_image_gallery);
             imgGallery = (ImageView) view.findViewById(R.id.gallery_img);
-
         }
     }
-
 }

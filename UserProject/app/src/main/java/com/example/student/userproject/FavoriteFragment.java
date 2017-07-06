@@ -34,7 +34,6 @@ public class FavoriteFragment extends Fragment {
     private RecyclerView recyclerView;
     private FirebaseDatabase mDtabase;
 
-
     public FavoriteFragment() {
     }
 
@@ -63,36 +62,11 @@ public class FavoriteFragment extends Fragment {
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rv);
         LinearLayoutManager lm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(lm);
-
         recyclerView.setHasFixedSize(true);
 
         onCreateFirebaseRecyclerAdapter(recyclerView);
-        recyclerView.addOnItemTouchListener(new RecyclerViewHelper(getActivity().getApplicationContext(), recyclerView,
-                new RecyclerViewHelper.RecyclerViewClickListener() {
-                    @Override
-                    public void onClick(View view, int position) {
-                        Bundle bundle = new Bundle();
-                        bundle.putParcelable("info", Parcels.wrap(photograpsList.get(position)));
-
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                        PhotographDetailInfoFragment fr = new PhotographDetailInfoFragment();
-                        fr.setArguments(bundle);
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.container,fr)
-                                .addToBackStack(null)
-                                .commit();
-                    }
-
-                    @Override
-                    public void onLongClick(View view, int position) {
-                        photograpsList.remove(position);
-
-                    }
-                }));
-
         return rootView;
     }
-
 
     private void onCreateFirebaseRecyclerAdapter(RecyclerView recyclerView) {
         final FirebaseRecyclerAdapter<PhotographInfo, MyViewHolder> adapter = new FirebaseRecyclerAdapter<PhotographInfo, MyViewHolder>(
@@ -115,7 +89,6 @@ public class FavoriteFragment extends Fragment {
         };
 
         recyclerView.setAdapter(adapter);
-
     }
 
     private static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -131,11 +104,5 @@ public class FavoriteFragment extends Fragment {
             tvPhone = (TextView) view.findViewById(R.id.person_phone);
             imgAvatar = (ImageView) view.findViewById(R.id.person_photo);
         }
-
     }
-
 }
-
-
-
-
