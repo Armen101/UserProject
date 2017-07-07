@@ -41,6 +41,7 @@ dependencies {
     compile 'com.firebaseui:firebase-ui-storage:0.6.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'org.parceler:parceler-api:1.1.6'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.7'
     annotationProcessor 'org.parceler:parceler:1.1.6'
     testCompile 'junit:junit:4.12'
 }
