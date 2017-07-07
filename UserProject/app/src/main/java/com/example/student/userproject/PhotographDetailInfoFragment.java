@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,8 @@ public class PhotographDetailInfoFragment extends Fragment {
     private RecyclerView detailRecyclerView;
     private List<PhotographInfo> detailList;
     private DatabaseReference mDatabaseGalleryRef;
-    private PhotographInfo info;
+    private PhotographInfo infoMap;
+    private PhotographInfo infoFav;
     private String uid;
 
     public PhotographDetailInfoFragment() {
@@ -46,7 +48,8 @@ public class PhotographDetailInfoFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // TODO  set information data to UI elements
-        info = Parcels.unwrap(getArguments().getParcelable("info"));
+        infoMap = Parcels.unwrap(getArguments().getParcelable("infoMap"));
+        infoFav = Parcels.unwrap(getArguments().getParcelable("infoFav"));
 
     }
 
@@ -56,26 +59,32 @@ public class PhotographDetailInfoFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_photograph_detail_info, container, false);
         findViewById(rootView);
 
-
-        detailList = new ArrayList<>();
-        detailName.setText(info.getName());
-        detailCameraInfo.setText(info.getCamera_info());
-        detailPhone.setText(info.getPhone());
-        detailAddress.setText(info.getAddress());
-        uid = info.getUid();
+        if (infoMap != null) {
+            photographerInfo(infoMap);
+        } else {
+            photographerInfo(infoFav);
+        }
 
         mDtabase = FirebaseDatabase.getInstance();
         mDatabaseRef = mDtabase.getReference().child("photographs").child(uid);  // TODO get specific fotograph images
         mDatabaseGalleryRef = mDatabaseRef.child("gallery");
 
-        Glide.with(getActivity())
-                .load(info.getAvatarUri())
-                .into(detailAvatar);
-
         detailRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         detailRecyclerView.setHasFixedSize(true);
         onCreateFirebaseRecyclerAdapter(detailRecyclerView);
         return rootView;
+    }
+
+    private void photographerInfo(PhotographInfo photographInfo) {
+        detailList = new ArrayList<>();
+        detailName.setText(photographInfo.getName());
+        detailCameraInfo.setText(photographInfo.getCamera_info());
+        detailPhone.setText(photographInfo.getPhone());
+        detailAddress.setText(photographInfo.getAddress());
+        uid = photographInfo.getUid();
+        Glide.with(getActivity())
+                .load(photographInfo.getAvatarUri())
+                .into(detailAvatar);
     }
 
     private void findViewById(View rootView) {
@@ -86,7 +95,6 @@ public class PhotographDetailInfoFragment extends Fragment {
         detailCameraInfo = (TextView) rootView.findViewById(R.id.tv_detail_camera_info);
         detailPhone = (TextView) rootView.findViewById(R.id.tv_detail_phone);
         detailRecyclerView = (RecyclerView) rootView.findViewById(R.id.detail_recyclerView);
-
     }
 
     private void onCreateFirebaseRecyclerAdapter(RecyclerView recyclerView) {
@@ -95,7 +103,6 @@ public class PhotographDetailInfoFragment extends Fragment {
                 R.layout.detail_recycler_row_item,
                 MyViewHolder.class,
                 mDatabaseGalleryRef
-
         ) {
             @Override
             protected void populateViewHolder(MyViewHolder viewHolder, PhotographInfo model, final int position) {

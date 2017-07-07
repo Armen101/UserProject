@@ -14,17 +14,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 // TODO correct card item UI (chases im emulyatrov lava)
 public class FavoriteFragment extends Fragment {
@@ -68,7 +64,7 @@ public class FavoriteFragment extends Fragment {
         return rootView;
     }
 
-    private void onCreateFirebaseRecyclerAdapter(RecyclerView recyclerView) {
+    private void onCreateFirebaseRecyclerAdapter(final RecyclerView recyclerView) {
         final FirebaseRecyclerAdapter<PhotographInfo, MyViewHolder> adapter = new FirebaseRecyclerAdapter<PhotographInfo, MyViewHolder>(
                 PhotographInfo.class,
                 R.layout.recycler_row_item,
@@ -77,10 +73,24 @@ public class FavoriteFragment extends Fragment {
 
         ) {
             @Override
-            protected void populateViewHolder(MyViewHolder viewHolder, PhotographInfo model, final int position) {
+            protected void populateViewHolder(MyViewHolder viewHolder, final PhotographInfo model, final int position) {
                 viewHolder.tvName.setText(model.getName());
                 viewHolder.tvPhone.setText(model.getPhone());
 
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("infoFav", Parcels.wrap(model));
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        PhotographDetailInfoFragment fr = new PhotographDetailInfoFragment();
+                        fr.setArguments(bundle);
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.container, fr)
+                                .addToBackStack(null)
+                                .commit();
+                    }
+                });
                 Glide.with(getActivity())
                         .load(model.getAvatarUri())
                         .into(viewHolder.imgAvatar);
