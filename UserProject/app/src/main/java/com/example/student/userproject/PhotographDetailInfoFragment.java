@@ -1,5 +1,7 @@
 package com.example.student.userproject;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -7,8 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -26,16 +30,26 @@ public class PhotographDetailInfoFragment extends Fragment {
     private DatabaseReference mDatabaseRef;
 
     private ImageView detailAvatar;
+    private ImageView imgPhone;
+    private ImageView imgCamera;
+
     private TextView detailName;
     private TextView detailAddress;
     private TextView detailCameraInfo;
     private TextView detailPhone;
     private RecyclerView detailRecyclerView;
     private List<PhotographInfo> detailList;
+
     private DatabaseReference mDatabaseGalleryRef;
     private PhotographInfo infoMap;
     private PhotographInfo infoFav;
     private String uid;
+    private ImageButton imgFavorite;
+    private SharedPreferences sheredPref;
+
+    public static final String MYPREF = "my_pref";
+    public static final String UID = "user_uid";
+
 
     public PhotographDetailInfoFragment() {
     }
@@ -47,9 +61,12 @@ public class PhotographDetailInfoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO  set information data to UI elements
+
         infoMap = Parcels.unwrap(getArguments().getParcelable("infoMap"));
         infoFav = Parcels.unwrap(getArguments().getParcelable("infoFav"));
+
+        sheredPref = this.getActivity().getSharedPreferences(MYPREF, Context.MODE_PRIVATE);
+
 
     }
 
@@ -66,11 +83,24 @@ public class PhotographDetailInfoFragment extends Fragment {
         }
 
         mDtabase = FirebaseDatabase.getInstance();
-        mDatabaseRef = mDtabase.getReference().child("photographs").child(uid);  // TODO get specific fotograph images
+        mDatabaseRef = mDtabase.getReference().child("photographs").child(uid);
         mDatabaseGalleryRef = mDatabaseRef.child("gallery");
 
         detailRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         detailRecyclerView.setHasFixedSize(true);
+
+        imgFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                imgFavorite.setImageResource(R.drawable.ic_favorite_black_24dp);
+                SharedPreferences.Editor editor = sheredPref.edit();
+                editor.putString(UID, uid);
+                editor.apply();
+                Toast.makeText(getActivity(), "hello ", Toast.LENGTH_SHORT).show();
+
+            }
+        });
         onCreateFirebaseRecyclerAdapter(detailRecyclerView);
         return rootView;
     }
@@ -95,7 +125,11 @@ public class PhotographDetailInfoFragment extends Fragment {
         detailCameraInfo = (TextView) rootView.findViewById(R.id.tv_detail_camera_info);
         detailPhone = (TextView) rootView.findViewById(R.id.tv_detail_phone);
         detailRecyclerView = (RecyclerView) rootView.findViewById(R.id.detail_recyclerView);
+        imgFavorite = (ImageButton) rootView.findViewById(R.id.btn_favorite);
+        imgPhone = (ImageView) rootView.findViewById(R.id.phone_img);
+        imgCamera = (ImageView) rootView.findViewById(R.id.camera_img);
     }
+
 
     private void onCreateFirebaseRecyclerAdapter(RecyclerView recyclerView) {
         final FirebaseRecyclerAdapter<PhotographInfo, MyViewHolder> adapter = new FirebaseRecyclerAdapter<PhotographInfo, MyViewHolder>(

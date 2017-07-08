@@ -22,13 +22,13 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO correct card item UI (chases im emulyatrov lava)
 public class FavoriteFragment extends Fragment {
 
     private DatabaseReference mDatabaseRef;
     private List<PhotographInfo> photograpsList;
     private RecyclerView recyclerView;
     private FirebaseDatabase mDtabase;
+
 
     public FavoriteFragment() {
     }
@@ -42,6 +42,7 @@ public class FavoriteFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
     }
 
