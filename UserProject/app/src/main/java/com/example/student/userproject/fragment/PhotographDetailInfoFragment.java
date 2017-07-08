@@ -1,4 +1,4 @@
-package com.example.student.userproject;
+package com.example.student.userproject.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,15 +6,17 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.student.userproject.model.PhotographInfo;
+import com.example.student.userproject.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -25,10 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PhotographDetailInfoFragment extends Fragment {
-
-    private FirebaseDatabase mDtabase;
-    private DatabaseReference mDatabaseRef;
-
     private ImageView detailAvatar;
     private ImageView imgPhone;
     private ImageView imgCamera;
@@ -39,6 +37,7 @@ public class PhotographDetailInfoFragment extends Fragment {
     private TextView detailPhone;
     private RecyclerView detailRecyclerView;
     private List<PhotographInfo> detailList;
+    private boolean isFavorite;
 
     private DatabaseReference mDatabaseGalleryRef;
     private PhotographInfo infoMap;
@@ -48,7 +47,7 @@ public class PhotographDetailInfoFragment extends Fragment {
     private SharedPreferences sheredPref;
 
     public static final String MYPREF = "my_pref";
-    public static final String UID = "user_uid";
+    public static final String FAVORITE_KEY = "fav_key";
 
 
     public PhotographDetailInfoFragment() {
@@ -65,9 +64,8 @@ public class PhotographDetailInfoFragment extends Fragment {
         infoMap = Parcels.unwrap(getArguments().getParcelable("infoMap"));
         infoFav = Parcels.unwrap(getArguments().getParcelable("infoFav"));
 
+
         sheredPref = this.getActivity().getSharedPreferences(MYPREF, Context.MODE_PRIVATE);
-
-
     }
 
     @Override
@@ -82,9 +80,11 @@ public class PhotographDetailInfoFragment extends Fragment {
             photographerInfo(infoFav);
         }
 
-        mDtabase = FirebaseDatabase.getInstance();
-        mDatabaseRef = mDtabase.getReference().child("photographs").child(uid);
+        FirebaseDatabase mDtabase = FirebaseDatabase.getInstance();
+        DatabaseReference mDatabaseRef = mDtabase.getReference().child("photographs").child(uid);
         mDatabaseGalleryRef = mDatabaseRef.child("gallery");
+
+        getFavoriteStatus();
 
         detailRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         detailRecyclerView.setHasFixedSize(true);
@@ -93,16 +93,34 @@ public class PhotographDetailInfoFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                imgFavorite.setImageResource(R.drawable.ic_favorite_black_24dp);
-                SharedPreferences.Editor editor = sheredPref.edit();
-                editor.putString(UID, uid);
-                editor.apply();
-                Toast.makeText(getActivity(), "hello ", Toast.LENGTH_SHORT).show();
+                if(isFavorite){
+                    Log.i("==== ","Favorite --> is  to not");
+                    imgFavorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                    SharedPreferences.Editor editor = sheredPref.edit();
+                    editor.putString(FAVORITE_KEY + uid, "");
+                    isFavorite = false;
+                    editor.apply();
 
+                }else{
+                    Log.i("==== ","Favorite --> not to is");
+                    imgFavorite.setImageResource(R.drawable.ic_favorite_black_24dp);
+                    SharedPreferences.Editor editor = sheredPref.edit();
+                    editor.putString(FAVORITE_KEY + uid, uid);
+                    isFavorite = true;
+                    editor.apply();
+                }
             }
         });
         onCreateFirebaseRecyclerAdapter(detailRecyclerView);
         return rootView;
+    }
+
+    private void getFavoriteStatus() {
+        String getFavoriteStatus = sheredPref.getString(FAVORITE_KEY + uid, "");
+
+        isFavorite = !getFavoriteStatus.equals("");
+        if(isFavorite) imgFavorite.setImageResource(R.drawable.ic_favorite_black_24dp);
+        else imgFavorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
     }
 
     private void photographerInfo(PhotographInfo photographInfo) {

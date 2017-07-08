@@ -1,11 +1,11 @@
 
 
-package com.example.student.userproject;
+package com.example.student.userproject.model;
 
 import org.parceler.Parcel;
 
 @Parcel
-class PhotographInfo {
+public class PhotographInfo {
 
     private String name;
     private String phone;
@@ -48,71 +48,43 @@ class PhotographInfo {
         return phone;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
 
     public String getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
 
     public String getCamera_info() {
         return camera_info;
     }
 
-    public void setCamera_info(String camera_info) {
-        this.camera_info = camera_info;
-    }
 
     public String getImageUri() {
         return imageUri;
     }
 
-    public void setImageUri(String imageUri) {
-        this.imageUri = imageUri;
-    }
 
     public String getAvatarUri() {
         return avatarUri;
     }
 
-    public void setAvatarUri(String avatarUri) {
-        this.avatarUri = avatarUri;
-    }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     public String getUid() {
         return uid;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
 
     public double getLatitude() {
         return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
     }
 
     public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
 }

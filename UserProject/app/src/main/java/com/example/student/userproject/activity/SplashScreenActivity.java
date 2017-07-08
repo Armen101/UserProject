@@ -1,4 +1,4 @@
-package com.example.student.userproject;
+package com.example.student.userproject.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+
+import com.example.student.userproject.R;
 
 
 public class SplashScreenActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package com.example.student.userproject;
+package com.example.student.userproject.service;
 
 import android.app.Service;
 import android.content.Intent;
