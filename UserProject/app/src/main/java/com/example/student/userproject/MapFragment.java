@@ -106,7 +106,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onStop() {
         super.onStop();
-        if (mapRipple.isAnimationRunning()) {
+        if (mapRipple != null && mapRipple.isAnimationRunning()) {
             mapRipple.stopRippleMapAnimation();
         }
     }
@@ -135,12 +135,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private void startDetailFragment(Marker marker) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable("infoMap",
-                Parcels.wrap(marker.getTag()));
-        FragmentManager fragmentManager =
-                getActivity().getSupportFragmentManager();
-        PhotographDetailInfoFragment fr =
-                new PhotographDetailInfoFragment();
+        bundle.putParcelable("infoMap", Parcels.wrap(marker.getTag()));
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        PhotographDetailInfoFragment fr = new PhotographDetailInfoFragment();
         fr.setArguments(bundle);
         fragmentManager.beginTransaction()
                 .replace(R.id.container, fr)
@@ -164,7 +161,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 new MarkerOptions().position(currentPosition));
                         if (isFirstLocationDetection) {
                             mMap.moveCamera(CameraUpdateFactory.newLatLng(currentPosition));
-                            mMap.animateCamera(CameraUpdateFactory.zoomTo(ZOOM_NUMBER), MAP_ANIMATION_DURATION, null);
+                            mMap.animateCamera(CameraUpdateFactory.zoomTo(ZOOM_NUMBER),
+                                    MAP_ANIMATION_DURATION, null);
                             isFirstLocationDetection = false;
                         }
                         if (mapRipple == null) {
@@ -191,7 +189,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         final Marker marker = mMap.addMarker(
                                 new MarkerOptions().position(latLng).title(info.getName()));
                         marker.setTag(info);
-                        // TODO add  avartars to the map like a marker
                         mMap.setOnInfoWindowClickListener(
                                 new GoogleMap.OnInfoWindowClickListener() {
                                     @Override

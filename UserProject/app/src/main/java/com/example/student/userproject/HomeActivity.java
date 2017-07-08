@@ -33,9 +33,6 @@ public class HomeActivity extends AppCompatActivity {
             return;
         }
 
-//        Intent i = new Intent(this, LocationService.class);
-//        startService(i);
-
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, MapFragment.newInstance()).commit();
 
