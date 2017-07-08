@@ -1,4 +1,4 @@
-package com.example.student.userproject;
+package com.example.student.userproject.activity;
 
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -11,6 +11,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.example.student.userproject.R;
+import com.example.student.userproject.fragment.FavoriteFragment;
+import com.example.student.userproject.fragment.MapFragment;
+import com.example.student.userproject.utility.FavoritAdapterHelper;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -46,6 +51,7 @@ public class HomeActivity extends AppCompatActivity {
                 Fragment selectedFragment = null;
                 switch (item.getItemId()) {
                     case R.id.action_config: {
+                        FavoritAdapterHelper.initFavoritList(HomeActivity.this);
                         selectedFragment = FavoriteFragment.newInstance();
                         break;
                     }

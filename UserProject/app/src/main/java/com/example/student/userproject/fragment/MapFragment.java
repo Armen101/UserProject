@@ -1,4 +1,4 @@
-package com.example.student.userproject;
+package com.example.student.userproject.fragment;
 
 
 import android.content.BroadcastReceiver;
@@ -21,6 +21,9 @@ import com.arsy.maps_library.MapRipple;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.example.student.userproject.service.LocationService;
+import com.example.student.userproject.model.PhotographInfo;
+import com.example.student.userproject.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
