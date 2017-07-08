@@ -11,6 +11,7 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 
 
+@SuppressWarnings("MissingPermission")
 public class LocationService extends Service {
 
     private LocationManager mLocationManager;
@@ -22,7 +23,6 @@ public class LocationService extends Service {
         return null;
     }
 
-    @SuppressWarnings("MissingPermission")
     @Override
     public void onCreate() {
         mLocationListener = new LocationListener() {
@@ -51,8 +51,9 @@ public class LocationService extends Service {
         };
 
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, mLocationListener);
-        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, mLocationListener);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, mLocationListener);
+        // TODO check is it necessary and request network provider when gps is not available
+//        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, mLocationListener);
     }
 
     @Override
