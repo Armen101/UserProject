@@ -4,20 +4,22 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.parceler.Parcels;
 
@@ -37,7 +39,6 @@ public class PhotographDetailInfoFragment extends Fragment {
     private TextView detailAddress;
     private TextView detailCameraInfo;
     private TextView detailPhone;
-    private RecyclerView detailRecyclerView;
     private List<PhotographInfo> detailList;
 
     private DatabaseReference mDatabaseGalleryRef;
@@ -50,6 +51,9 @@ public class PhotographDetailInfoFragment extends Fragment {
     public static final String MYPREF = "my_pref";
     public static final String UID = "user_uid";
 
+    private ViewPager viewpagerCar;
+    private FrameLayout pagerLayout;
+    public static final int ADAPTER_TYPE_TOP = 1;
 
     public PhotographDetailInfoFragment() {
     }
@@ -66,33 +70,41 @@ public class PhotographDetailInfoFragment extends Fragment {
         infoFav = Parcels.unwrap(getArguments().getParcelable("infoFav"));
 
         sheredPref = this.getActivity().getSharedPreferences(MYPREF, Context.MODE_PRIVATE);
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_photograph_detail_info, container, false);
-        findViewById(rootView);
 
+        findViewById(rootView);
         if (infoMap != null) {
             photographerInfo(infoMap);
         } else {
             photographerInfo(infoFav);
         }
-
         mDtabase = FirebaseDatabase.getInstance();
         mDatabaseRef = mDtabase.getReference().child("photographs").child(uid);
         mDatabaseGalleryRef = mDatabaseRef.child("gallery");
+        mDatabaseGalleryRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnepshot : dataSnapshot.getChildren()) {
+                    final PhotographInfo info = postSnepshot.getValue(PhotographInfo.class);
+                    detailList.add(info);
+                }
+                setupViewPager();
+            }
+            @Override
+            public void onCancelled(DatabaseError error) {
+            }
+        });
 
-        detailRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-        detailRecyclerView.setHasFixedSize(true);
+        init(rootView);
 
         imgFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 imgFavorite.setImageResource(R.drawable.ic_favorite_black_24dp);
                 SharedPreferences.Editor editor = sheredPref.edit();
                 editor.putString(UID, uid);
@@ -101,8 +113,39 @@ public class PhotographDetailInfoFragment extends Fragment {
 
             }
         });
-        onCreateFirebaseRecyclerAdapter(detailRecyclerView);
         return rootView;
+    }
+
+    private void init(View rootView) {
+        viewpagerCar = (ViewPager) rootView.findViewById(R.id.view_pager_car);
+        pagerLayout = (FrameLayout) rootView.findViewById(R.id.pager_layout);
+
+        viewpagerCar.setClipChildren(false);
+        viewpagerCar.setPageMargin(getResources().getDimensionPixelOffset(R.dimen.pager_margin));
+        viewpagerCar.setOffscreenPageLimit(3);
+        viewpagerCar.setPageTransformer(false, new CarouselTransformer(getContext()));// Set transformer);
+    }
+
+    private void setupViewPager() {
+        CarouselPagerAdapter adapter = new CarouselPagerAdapter(getContext(), detailList, ADAPTER_TYPE_TOP);
+        viewpagerCar.setAdapter(adapter);
+        viewpagerCar.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            private int index = 0;
+
+            @Override
+            public void onPageSelected(int position) {
+                index = position;
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
 
     private void photographerInfo(PhotographInfo photographInfo) {
@@ -118,48 +161,13 @@ public class PhotographDetailInfoFragment extends Fragment {
     }
 
     private void findViewById(View rootView) {
-
         detailAvatar = (ImageView) rootView.findViewById(R.id.img_detail_avatar);
         detailName = (TextView) rootView.findViewById(R.id.tv_detail_name);
         detailAddress = (TextView) rootView.findViewById(R.id.tv_detail_address);
         detailCameraInfo = (TextView) rootView.findViewById(R.id.tv_detail_camera_info);
         detailPhone = (TextView) rootView.findViewById(R.id.tv_detail_phone);
-        detailRecyclerView = (RecyclerView) rootView.findViewById(R.id.detail_recyclerView);
         imgFavorite = (ImageButton) rootView.findViewById(R.id.btn_favorite);
         imgPhone = (ImageView) rootView.findViewById(R.id.phone_img);
         imgCamera = (ImageView) rootView.findViewById(R.id.camera_img);
-    }
-
-
-    private void onCreateFirebaseRecyclerAdapter(RecyclerView recyclerView) {
-        final FirebaseRecyclerAdapter<PhotographInfo, MyViewHolder> adapter = new FirebaseRecyclerAdapter<PhotographInfo, MyViewHolder>(
-                PhotographInfo.class,
-                R.layout.detail_recycler_row_item,
-                MyViewHolder.class,
-                mDatabaseGalleryRef
-        ) {
-            @Override
-            protected void populateViewHolder(MyViewHolder viewHolder, PhotographInfo model, final int position) {
-                viewHolder.galleryImageTitle.setText(model.getTitle());
-
-                Glide.with(getActivity())
-                        .load(model.getImageUri())
-                        .into(viewHolder.imgGallery);
-                detailList.add(model);
-            }
-        };
-        recyclerView.setAdapter(adapter);
-    }
-
-    private static class MyViewHolder extends RecyclerView.ViewHolder {
-
-        private final ImageView imgGallery;
-        private final TextView galleryImageTitle;
-
-        public MyViewHolder(View view) {
-            super(view);
-            galleryImageTitle = (TextView) view.findViewById(R.id.title_image_gallery);
-            imgGallery = (ImageView) view.findViewById(R.id.gallery_img);
-        }
     }
 }
