@@ -9,15 +9,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.student.userproject.CarouselPagerAdapter;
 import com.example.student.userproject.CarouselTransformer;
+import com.example.student.userproject.utility.NetworkHelper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.example.student.userproject.model.PhotographInfo;
@@ -31,11 +34,12 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PhotographDetailInfoFragment extends Fragment {
+public class PhotographDetailInfoFragment extends Fragment implements View.OnClickListener {
     private ImageView detailAvatar;
     private ImageView imgPhone;
     private ImageView imgCamera;
 
+    private Button sendNotification;
     private TextView detailName;
     private TextView detailAddress;
     private TextView detailCameraInfo;
@@ -106,31 +110,14 @@ public class PhotographDetailInfoFragment extends Fragment {
         init(rootView);
         getFavoriteStatus();
 
-        imgFavorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isFavorite){
-                    Log.i("==== ","Favorite --> is  to not");
-                    imgFavorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                    SharedPreferences.Editor editor = sheredPref.edit();
-                    editor.putString(FAVORITE_KEY + uid, "");
-                    isFavorite = false;
-                    editor.apply();
+        sendNotification.setOnClickListener(this);
+        imgFavorite.setOnClickListener(this);
 
-                }else{
-                    Log.i("==== ","Favorite --> not to is");
-                    imgFavorite.setImageResource(R.drawable.ic_favorite_black_24dp);
-                    SharedPreferences.Editor editor = sheredPref.edit();
-                    editor.putString(FAVORITE_KEY + uid, uid);
-                    isFavorite = true;
-                    editor.apply();
-                }
-            }
-        });
         return rootView;
     }
 
     private void init(View rootView) {
+
         viewpagerCar = (ViewPager) rootView.findViewById(R.id.view_pager_car);
         pagerLayout = (FrameLayout) rootView.findViewById(R.id.pager_layout);
         viewpagerCar.setClipChildren(false);
@@ -179,6 +166,7 @@ public class PhotographDetailInfoFragment extends Fragment {
     }
 
     private void findViewById(View rootView) {
+        sendNotification = (Button) rootView.findViewById(R.id.send_notification);
         detailAvatar = (ImageView) rootView.findViewById(R.id.img_detail_avatar);
         detailName = (TextView) rootView.findViewById(R.id.tv_detail_name);
         detailAddress = (TextView) rootView.findViewById(R.id.tv_detail_address);
@@ -187,5 +175,33 @@ public class PhotographDetailInfoFragment extends Fragment {
         imgFavorite = (ImageButton) rootView.findViewById(R.id.btn_favorite);
         imgPhone = (ImageView) rootView.findViewById(R.id.phone_img);
         imgCamera = (ImageView) rootView.findViewById(R.id.camera_img);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.send_notification:{
+                NetworkHelper networkHelper = new NetworkHelper();
+                networkHelper.sendNotificationRequest();
+            }
+            case R.id.btn_favorite:{
+                if(isFavorite){
+                    Log.i("==== ","Favorite --> is  to not");
+                    imgFavorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
+                    SharedPreferences.Editor editor = sheredPref.edit();
+                    editor.putString(FAVORITE_KEY + uid, "");
+                    isFavorite = false;
+                    editor.apply();
+
+                }else{
+                    Log.i("==== ","Favorite --> not to is");
+                    imgFavorite.setImageResource(R.drawable.ic_favorite_black_24dp);
+                    SharedPreferences.Editor editor = sheredPref.edit();
+                    editor.putString(FAVORITE_KEY + uid, uid);
+                    isFavorite = true;
+                    editor.apply();
+                }
+            }
+        }
     }
 }

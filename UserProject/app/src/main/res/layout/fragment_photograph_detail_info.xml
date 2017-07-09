@@ -97,11 +97,17 @@
 
     </LinearLayout>
 
+    <Button
+        android:layout_gravity="center"
+        android:id="@+id/send_notification"
+        android:text="Send notification to Photographer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
     <FrameLayout
         android:visibility="visible"
         android:id="@+id/pager_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="325dp">
 
         <View
             android:layout_width="match_parent"
@@ -113,13 +119,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            android:clipToPadding="false"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp"
-            android:paddingTop="100dp"
-            android:paddingBottom="100dp"
             android:layout_gravity="center"/>
 
     </FrameLayout>
+
+
 
 </LinearLayout>
