@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.example.student.userproject.model.PhotographInfo;
 
 import java.util.List;
 

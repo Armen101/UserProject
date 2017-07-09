@@ -12,11 +12,13 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.student.userproject.activity.HomeActivity;
+import com.example.student.userproject.model.PhotographInfo;
 
 import java.io.Serializable;
 import java.util.List;
 
-import static com.example.student.userproject.PhotographDetailInfoFragment.ADAPTER_TYPE_TOP;
+import static com.example.student.userproject.fragment.PhotographDetailInfoFragment.ADAPTER_TYPE_TOP;
 
 public class CarouselPagerAdapter extends PagerAdapter {
 
