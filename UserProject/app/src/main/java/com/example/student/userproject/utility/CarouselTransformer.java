@@ -1,4 +1,4 @@
-package com.example.student.userproject;
+package com.example.student.userproject.utility;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;

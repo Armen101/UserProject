@@ -10,16 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.student.userproject.CarouselPagerAdapter;
-import com.example.student.userproject.CarouselTransformer;
+import com.example.student.userproject.adapter.CarouselPagerAdapter;
+import com.example.student.userproject.utility.CarouselTransformer;
 import com.example.student.userproject.utility.NetworkHelper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,9 +32,6 @@ import java.util.List;
 
 public class PhotographDetailInfoFragment extends Fragment implements View.OnClickListener {
     private ImageView detailAvatar;
-    private ImageView imgPhone;
-    private ImageView imgCamera;
-
     private Button sendNotification;
     private TextView detailName;
     private TextView detailAddress;
@@ -47,21 +40,17 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
     private List<PhotographInfo> detailList;
     private boolean isFavorite;
 
-    private DatabaseReference mDatabaseGalleryRef;
     private PhotographInfo infoMap;
     private PhotographInfo infoFav;
     private String uid;
-    private ImageButton imgFavorite;
+    private ImageView imgFavorite;
     private SharedPreferences sheredPref;
 
     public static final String MYPREF = "my_pref";
     public static final String FAVORITE_KEY = "fav_key";
 
     private ViewPager viewpagerCar;
-    private FrameLayout pagerLayout;
     public static final int ADAPTER_TYPE_TOP = 1;
-    private FirebaseDatabase mDtabase;
-    private DatabaseReference mDatabaseRef;
 
     public PhotographDetailInfoFragment() {
     }
@@ -90,9 +79,9 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
         } else {
             photographerInfo(infoFav);
         }
-        mDtabase = FirebaseDatabase.getInstance();
-        mDatabaseRef = mDtabase.getReference().child("photographs").child(uid);
-        mDatabaseGalleryRef = mDatabaseRef.child("gallery");
+        FirebaseDatabase mDtabase = FirebaseDatabase.getInstance();
+        DatabaseReference mDatabaseRef = mDtabase.getReference().child("photographs").child(uid);
+        DatabaseReference mDatabaseGalleryRef = mDatabaseRef.child("gallery");
         mDatabaseGalleryRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -119,7 +108,6 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
     private void init(View rootView) {
 
         viewpagerCar = (ViewPager) rootView.findViewById(R.id.view_pager_car);
-        pagerLayout = (FrameLayout) rootView.findViewById(R.id.pager_layout);
         viewpagerCar.setClipChildren(false);
         viewpagerCar.setPageMargin(getResources().getDimensionPixelOffset(R.dimen.pager_margin));
         viewpagerCar.setOffscreenPageLimit(3);
@@ -172,9 +160,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
         detailAddress = (TextView) rootView.findViewById(R.id.tv_detail_address);
         detailCameraInfo = (TextView) rootView.findViewById(R.id.tv_detail_camera_info);
         detailPhone = (TextView) rootView.findViewById(R.id.tv_detail_phone);
-        imgFavorite = (ImageButton) rootView.findViewById(R.id.btn_favorite);
-        imgPhone = (ImageView) rootView.findViewById(R.id.phone_img);
-        imgCamera = (ImageView) rootView.findViewById(R.id.camera_img);
+        imgFavorite = (ImageView) rootView.findViewById(R.id.btn_favorite);
     }
 
     @Override

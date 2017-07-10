@@ -1,4 +1,4 @@
-package com.example.student.userproject;
+package com.example.student.userproject.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,10 +8,10 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.example.student.userproject.R;
 import com.example.student.userproject.model.PhotographInfo;
 
 import java.util.List;
@@ -19,28 +19,21 @@ import java.util.List;
 public class FullScreenFragment extends DialogFragment {
 
     private ViewPager fullViewPager;
-
-    ImageView imageFullScreen;
-    FrameLayout fullScreenLayout;
-    private View rootView;
     private List<PhotographInfo>infoList;
-
-    public FullScreenFragment() {
-        // Required empty public constructor
-    }
+    private static FullScreenFragment instance;
 
     public static FullScreenFragment newInstance() {
-
-        return new FullScreenFragment();
+        if(instance == null){
+            instance = new FullScreenFragment();
+        }
+        return instance;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_full_screen, container, false);
 
-        imageFullScreen =(ImageView)rootView.findViewById(R.id.image_full_screen);
-        fullScreenLayout = (FrameLayout) rootView.findViewById(R.id.full_screen_layout);
+        View rootView = inflater.inflate(R.layout.fragment_full_screen, container, false);
         fullViewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
         infoList = (List<PhotographInfo>) getArguments().getSerializable("images");
         int mSelectedPosition = getArguments().getInt("position");
@@ -84,11 +77,12 @@ public class FullScreenFragment extends DialogFragment {
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
     }
 
-    public class MyViewPagerAdapter extends PagerAdapter {
+    private class MyViewPagerAdapter extends PagerAdapter {
 
         private LayoutInflater layoutInflater;
 
-        public MyViewPagerAdapter() {
+        MyViewPagerAdapter() {
+
         }
 
         @Override
@@ -120,5 +114,4 @@ public class FullScreenFragment extends DialogFragment {
             container.removeView((View) object);
         }
     }
-
 }

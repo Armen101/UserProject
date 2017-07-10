@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorHomeBackground"
     android:orientation="vertical"
     tools:context="com.example.student.userproject.activity.HomeActivity">
 
@@ -17,11 +18,10 @@
         android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorBottomBackground"
         android:layout_height="wrap_content"
-        app:itemIconTint="@color/colorNav"
-        app:itemTextColor="@color/colorNav2"
+        app:itemIconTint="@color/colorRed"
+        app:itemTextColor="@color/colorWhite"
         app:menu="@menu/bottom_navigation_item"/>
-
 
 </RelativeLayout>

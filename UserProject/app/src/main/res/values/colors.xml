@@ -3,7 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorNav">#ca1a2b</color>
+    <color name="colorHomeBackground">#3f4659</color>
+    <color name="colorBottomBackground">#222940</color>
+    <color name="colorRed">#ef5564</color>
     <color name="colorNav2">#161414</color>
     <color name="colorWhite">#FFFFFF</color>
 </resources>

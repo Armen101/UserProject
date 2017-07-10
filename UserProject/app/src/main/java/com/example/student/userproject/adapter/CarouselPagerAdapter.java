@@ -1,4 +1,4 @@
-package com.example.student.userproject;
+package com.example.student.userproject.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.student.userproject.fragment.FullScreenFragment;
+import com.example.student.userproject.R;
 import com.example.student.userproject.activity.HomeActivity;
 import com.example.student.userproject.model.PhotographInfo;
 
@@ -22,48 +24,50 @@ import static com.example.student.userproject.fragment.PhotographDetailInfoFragm
 
 public class CarouselPagerAdapter extends PagerAdapter {
 
-    private Context context;
-    private List<PhotographInfo> infoList;
-    private int adapterType;
+    private Context mContext;
+    private List<PhotographInfo> mInfoList;
+    private int mAdapterType;
 
-    public CarouselPagerAdapter() {
-    }
-
-    public CarouselPagerAdapter(Context context, List<PhotographInfo> infoList, int adapterType) {
-        this.context = context;
-        this.infoList = infoList;
-        this.adapterType = adapterType;
+    public CarouselPagerAdapter(Context context, List<PhotographInfo> mInfoList, int adapterType) {
+        this.mContext = context;
+        this.mInfoList = mInfoList;
+        this.mAdapterType = adapterType;
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, final int position) {
-        final View view = LayoutInflater.from(context).inflate(R.layout.item, null);
+        final View view = LayoutInflater.from(mContext).inflate(R.layout.full_screen_item, null);
         try {
 
             RelativeLayout relMain = (RelativeLayout) view.findViewById(R.id.rel_main);
             ImageView image = (ImageView) view.findViewById(R.id.image);
             relMain.setTag(position);
+
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Fragment f = new FullScreenFragment();
+                    Fragment fullScreenFragment = FullScreenFragment.newInstance();
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("images", (Serializable) infoList);
+                    bundle.putSerializable("images", (Serializable) mInfoList);
                     bundle.putInt("position", position);
-                    f.setArguments(bundle);
-                    ((HomeActivity) context).getSupportFragmentManager().beginTransaction().replace(R.id.container, f).commit();
-                    Toast.makeText(context, "click on item " + position, Toast.LENGTH_LONG).show();
+                    fullScreenFragment.setArguments(bundle);
+
+                    ((HomeActivity) mContext).getSupportFragmentManager().
+                            beginTransaction().replace(R.id.container, fullScreenFragment)
+                            .commit();
+
+                    Toast.makeText(mContext, "click on full_screen_item " + position, Toast.LENGTH_LONG).show();
                 }
             });
 
-            switch (adapterType) {
+            switch (mAdapterType) {
                 case ADAPTER_TYPE_TOP:
                     relMain.setBackgroundResource(R.drawable.shadow);
                     break;
             }
 
-            Glide.with(context)
-                    .load(infoList.get(position).getImageUri())
+            Glide.with(mContext)
+                    .load(mInfoList.get(position).getImageUri())
                     .into(image);
             container.addView(view);
 
@@ -80,15 +84,12 @@ public class CarouselPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-
-        return infoList.size();
+        return mInfoList.size();
     }
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-
         return (view == object);
     }
-
 
 }
