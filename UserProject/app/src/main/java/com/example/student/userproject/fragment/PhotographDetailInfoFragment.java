@@ -169,6 +169,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
             case R.id.send_notification:{
                 NetworkHelper networkHelper = new NetworkHelper();
                 networkHelper.sendNotificationRequest();
+                break;
             }
             case R.id.btn_favorite:{
                 if(isFavorite){
@@ -188,6 +189,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
                     editor.apply();
                 }
             }
+            break;
         }
     }
 }

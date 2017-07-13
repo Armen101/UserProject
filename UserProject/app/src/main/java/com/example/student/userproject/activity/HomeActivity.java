@@ -9,6 +9,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import com.example.student.userproject.R;
 import com.example.student.userproject.fragment.FavoriteFragment;
 import com.example.student.userproject.fragment.MapFragment;
 import com.example.student.userproject.utility.FavoritAdapterHelper;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -37,6 +39,9 @@ public class HomeActivity extends AppCompatActivity {
             }
             return;
         }
+
+        String token = FirebaseInstanceId.getInstance().getToken();
+        Log.i("Tooooooooken", token);
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, MapFragment.newInstance()).commit();

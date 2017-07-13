@@ -30,7 +30,7 @@ public class NetworkHelper {
         dataObject.setIcon(R.drawable.ic_favorite_border_black_24dp);
         dataObject.setMessage("Hello,can i call you?");
         notificationData.setData(dataObject);
-        notificationData.setTo("/topics/uid");
+        notificationData.setTo("eN0GGYY6at0:APA91bGsq-YyKeV9yKwAHC9WzHz-sK14f8YdJgprejtt5HbWYIv867-tWsDIFtRRklDCzLX3-sUnG0VdcPbxjILjou_zO7QLrXRtXCYb9_6kWuxFxBPFD2JcqNAV9P0wgNis5e59t_uZ");
 
         String json = gson.toJson(notificationData);
         String url = "https://fcm.googleapis.com/fcm/send";
