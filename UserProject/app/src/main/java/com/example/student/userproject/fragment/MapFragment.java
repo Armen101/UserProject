@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,6 +65,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private LatLng currentPosition;
     private boolean isFirstLocationDetection = true;
     private Intent serviceIntent;
+    private SupportMapFragment fragmentMap;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -82,7 +84,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         View rootV = inflater.inflate(R.layout.fragment_map, container, false);
         FirebaseDatabase dtabase = FirebaseDatabase.getInstance();
         mDatabaseRef = dtabase.getReference().child("photographs");
@@ -94,9 +96,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        SupportMapFragment fragment =
-                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapView);
-        fragment.getMapAsync(this);
+        fragmentMap = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapView);
+        fragmentMap.getMapAsync(this);
     }
 
     @Override
@@ -120,8 +121,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (mBroadcastReceiver != null) {
             getActivity().unregisterReceiver(mBroadcastReceiver);
         }
-        mMap.clear();
+//        mMap.clear();
         getActivity().stopService(serviceIntent);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        try {
+
+            FragmentTransaction ft = getActivity().getSupportFragmentManager()
+                    .beginTransaction();
+            ft.remove(fragmentMap);
+            ft.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initMapRadar(LatLng currentPosition) {

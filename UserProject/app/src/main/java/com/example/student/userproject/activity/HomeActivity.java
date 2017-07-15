@@ -44,7 +44,9 @@ public class HomeActivity extends AppCompatActivity {
         Log.i("Tooooooooken", token);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, MapFragment.newInstance()).commit();
+                .add(R.id.container, MapFragment.newInstance())
+                .addToBackStack(null)
+                .commit();
 
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
@@ -67,6 +69,7 @@ public class HomeActivity extends AppCompatActivity {
                 }
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.container, selectedFragment);
+                transaction.addToBackStack(null);
                 transaction.commit();
                 return true;
             }
@@ -77,7 +80,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-            String permissions[], int[] grantResults) {
+                                           String permissions[], int[] grantResults) {
         switch (requestCode) {
             case 10: {
                 // If request is cancelled, the result arrays are empty.
@@ -97,4 +100,16 @@ public class HomeActivity extends AppCompatActivity {
             // permissions this app might request
         }
     }
+
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().findFragmentById(R.id.container) != null) {
+            super.onBackPressed();
+            if (getSupportFragmentManager().findFragmentById(R.id.container) == null) {
+                finish();
+            }
+        }
+    }
+
 }
