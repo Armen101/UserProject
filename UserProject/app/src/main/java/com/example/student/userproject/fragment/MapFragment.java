@@ -138,7 +138,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private void startDetailFragment(Marker marker) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable("infoMap", Parcels.wrap(marker.getTag()));
+        bundle.putParcelable("userInfo", Parcels.wrap(marker.getTag()));
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         PhotographDetailInfoFragment fr = new PhotographDetailInfoFragment();
         fr.setArguments(bundle);

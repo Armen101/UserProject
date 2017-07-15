@@ -40,8 +40,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
     private List<PhotographInfo> detailList;
     private boolean isFavorite;
 
-    private PhotographInfo infoMap;
-    private PhotographInfo infoFav;
+    private PhotographInfo userInfo;
     private String uid;
     private ImageView imgFavorite;
     private SharedPreferences sheredPref;
@@ -63,8 +62,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        infoMap = Parcels.unwrap(getArguments().getParcelable("infoMap"));
-        infoFav = Parcels.unwrap(getArguments().getParcelable("infoFav"));
+        userInfo = Parcels.unwrap(getArguments().getParcelable("userInfo"));
         sheredPref = this.getActivity().getSharedPreferences(MYPREF, Context.MODE_PRIVATE);
     }
 
@@ -74,10 +72,8 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
         View rootView = inflater.inflate(R.layout.fragment_photograph_detail_info, container, false);
 
         findViewById(rootView);
-        if (infoMap != null) {
-            photographerInfo(infoMap);
-        } else {
-            photographerInfo(infoFav);
+        if (userInfo != null) {
+            photographerInfo(userInfo);
         }
         FirebaseDatabase mDtabase = FirebaseDatabase.getInstance();
         DatabaseReference mDatabaseRef = mDtabase.getReference().child("photographs").child(uid);
@@ -167,8 +163,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.send_notification:{
-                NetworkHelper networkHelper = new NetworkHelper();
-                networkHelper.sendNotificationRequest();
+                NetworkHelper.sendNotificationRequest(getContext(), userInfo.getUid());
                 break;
             }
             case R.id.btn_favorite:{

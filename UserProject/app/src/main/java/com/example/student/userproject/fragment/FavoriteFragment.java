@@ -53,7 +53,7 @@ public class FavoriteFragment extends Fragment implements FavoritsRecyclerAdapte
     @Override
     public void getModel(PhotographInfo model) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable("infoFav", Parcels.wrap(model));
+        bundle.putParcelable("userInfo", Parcels.wrap(model));
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         PhotographDetailInfoFragment fr = new PhotographDetailInfoFragment();
         fr.setArguments(bundle);
