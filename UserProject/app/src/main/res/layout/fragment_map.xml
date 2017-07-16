@@ -12,4 +12,11 @@
         android:layout_height="match_parent"
         map:uiZoomControls="true" />
 
+    <Button
+        android:id="@+id/map_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|center"
+        android:background="@drawable/round_button" />
+
 </FrameLayout>

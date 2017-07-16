@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
@@ -17,6 +18,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.arsy.maps_library.MapRipple;
 import com.bumptech.glide.Glide;
@@ -44,8 +46,11 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
+    private static final String SAVED_TEXT = "save text";
     private static final long MAP_RADAR_ANIMATION_DURATION = 12000;
     private static final float ZOOM_NUMBER = 13;
     private static final int MAP_ANIMATION_DURATION = 2000;
@@ -66,6 +71,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private boolean isFirstLocationDetection = true;
     private Intent serviceIntent;
     private SupportMapFragment fragmentMap;
+    private Button mBtn;
+    private int counter = 5;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -89,6 +96,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         FirebaseDatabase dtabase = FirebaseDatabase.getInstance();
         mDatabaseRef = dtabase.getReference().child("photographs");
         photograpsList = new ArrayList<>();
+        SharedPreferences getPref = getActivity().getSharedPreferences("SharedPref", MODE_PRIVATE);
+        counter = getPref.getInt(SAVED_TEXT, 5);
+        mBtn = (Button) rootV.findViewById(R.id.map_button);
+        mBtn.setText(String.valueOf(counter));
+        mBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                counter--;
+                mBtn.setText(String.valueOf(counter));
+                if (counter == 0) {
+                    mBtn.setEnabled(false);
+                }
+                save();
+            }
+        });
         return rootV;
     }
 
@@ -265,8 +287,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 });
             }
         }).start();
+    }
 
-
+    private void save() {
+        SharedPreferences mShared = getActivity().getSharedPreferences("SharedPref", MODE_PRIVATE);
+        SharedPreferences.Editor ed = mShared.edit();
+        ed.putInt(SAVED_TEXT, counter);
+        ed.apply();
     }
 
 }
