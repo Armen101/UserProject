@@ -44,6 +44,9 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
     private String uid;
     private ImageView imgFavorite;
     private SharedPreferences sheredPref;
+    
+    private EditText etPhone;
+    private Dialog alertDialog;
 
     public static final String MYPREF = "my_pref";
     public static final String FAVORITE_KEY = "fav_key";
@@ -161,6 +164,50 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
         detailPhone = (TextView) rootView.findViewById(R.id.tv_detail_phone);
         imgFavorite = (ImageView) rootView.findViewById(R.id.btn_favorite);
     }
+    
+     private AlertDialog.Builder initDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        dialogBuilder.setTitle("Please set your phone");
+        dialogBuilder.setView(getDialogLayout());
+        return dialogBuilder;
+    }
+
+    private View getDialogLayout() {
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_layout, null);
+        etPhone = (EditText) dialogView.findViewById(R.id.et_phone);
+        final Button btnSend = (Button) dialogView.findViewById(R.id.btn_send);
+        btnSend.setEnabled(false);
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = getArguments();
+                double lat = bundle.getDouble("lat");
+                double lng = bundle.getDouble("lng");
+                NetworkHelper.sendNotificationRequest(getContext(), userInfo.getUid(), lat, lng, etPhone.getText().toString());
+                alertDialog.dismiss();
+            }
+        });
+        etPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!s.toString().isEmpty()) {
+                    btnSend.setEnabled(true);
+                } else btnSend.setEnabled(false);
+            }
+        });
+        return dialogView;
+    }
 
     @Override
     public void onClick(View v) {
@@ -169,7 +216,9 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
         double lng = bundle.getDouble("lng");
         switch (v.getId()){
             case R.id.send_notification:{
-                NetworkHelper.sendNotificationRequest(getContext(), userInfo.getUid(),lat,lng);
+                AlertDialog.Builder dialogBuilder = initDialog();
+                alertDialog = dialogBuilder.create();
+                alertDialog.show();
                 break;
             }
             case R.id.btn_favorite:{
