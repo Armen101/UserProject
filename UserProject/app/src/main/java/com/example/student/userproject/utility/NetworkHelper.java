@@ -23,14 +23,19 @@ public class NetworkHelper {
 
     private static final String SERVER_KEY = "AAAAXOlepJ4:APA91bG49WQvvZ4YDaT_Wf_n7cLXwhjjwoo0rVzuw-r3cIEE9FC2WvimfMEmxEK1aw7rdkIkMwPyDk0_BxWWf3XuCIDSnWKqE8v_4hHNpQQb85yCgmcH2mgC5lSJjcScGRRdBRkknFhI";
 
-    public static void sendNotificationRequest(Context context, String uid,double mLat,double mLng){
+   public static void sendNotificationRequest(Context context, String uid, double lat, double lng, String phoneNumber){
         SharedPreferences getPref = context.getSharedPreferences("shared_key",Context.MODE_PRIVATE);
         String token = getPref.getString("token_key","");
         Gson gson = new Gson();
         NotificationData notificationData = new NotificationData();
         DataObject dataObject = new DataObject();
-        dataObject.setLat(mLat);
-        dataObject.setLng(mLng);
+        if (lat != 0 && lng != 0) {
+            dataObject.setLat(lat);
+            dataObject.setLng(lng);
+        }
+        if(phoneNumber != null) {
+            dataObject.setPhone(phoneNumber);
+        }
         dataObject.setTitle("You have a new order!");
         dataObject.setToken(token);
 
@@ -61,5 +66,5 @@ public class NetworkHelper {
             }
         });
     }
-    }
+}
 
