@@ -64,6 +64,9 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
 
         userInfo = Parcels.unwrap(getArguments().getParcelable("userInfo"));
         sheredPref = this.getActivity().getSharedPreferences(MYPREF, Context.MODE_PRIVATE);
+
+
+
     }
 
     @Override
@@ -161,9 +164,12 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
 
     @Override
     public void onClick(View v) {
+        Bundle bundle = getArguments();
+        double lat = bundle.getDouble("lat");
+        double lng = bundle.getDouble("lng");
         switch (v.getId()){
             case R.id.send_notification:{
-                NetworkHelper.sendNotificationRequest(getContext(), userInfo.getUid());
+                NetworkHelper.sendNotificationRequest(getContext(), userInfo.getUid(),lat,lng);
                 break;
             }
             case R.id.btn_favorite:{

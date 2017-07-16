@@ -1,6 +1,8 @@
 package com.example.student.userproject.utility;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.example.student.userproject.R;
 import com.example.student.userproject.model.DataObject;
@@ -21,14 +23,17 @@ public class NetworkHelper {
 
     private static final String SERVER_KEY = "AAAAXOlepJ4:APA91bG49WQvvZ4YDaT_Wf_n7cLXwhjjwoo0rVzuw-r3cIEE9FC2WvimfMEmxEK1aw7rdkIkMwPyDk0_BxWWf3XuCIDSnWKqE8v_4hHNpQQb85yCgmcH2mgC5lSJjcScGRRdBRkknFhI";
 
-    public static void sendNotificationRequest(Context context, String uid){
-        // TODO ogtagorcel shared preference
+    public static void sendNotificationRequest(Context context, String uid,double mLat,double mLng){
+        SharedPreferences getPref = context.getSharedPreferences("shared_key",Context.MODE_PRIVATE);
+        String token = getPref.getString("token_key","");
         Gson gson = new Gson();
         NotificationData notificationData = new NotificationData();
         DataObject dataObject = new DataObject();
+        dataObject.setLat(mLat);
+        dataObject.setLng(mLng);
         dataObject.setTitle("You have a new order!");
-        dataObject.setIcon(R.drawable.ic_favorite_border_black_24dp);
-        dataObject.setMessage("Hello,can i call you?");
+        dataObject.setToken(token);
+
         notificationData.setData(dataObject);
         notificationData.setTo("/topics/" + uid);
 

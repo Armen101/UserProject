@@ -150,9 +150,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
         try {
-
             FragmentTransaction ft = getActivity().getSupportFragmentManager()
                     .beginTransaction();
             ft.remove(fragmentMap);
@@ -177,6 +175,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private void startDetailFragment(Marker marker) {
         Bundle bundle = new Bundle();
         bundle.putParcelable("userInfo", Parcels.wrap(marker.getTag()));
+        bundle.putDouble("lat", currentLat);
+        bundle.putDouble("lng", currentLng);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         PhotographDetailInfoFragment fr = new PhotographDetailInfoFragment();
         fr.setArguments(bundle);

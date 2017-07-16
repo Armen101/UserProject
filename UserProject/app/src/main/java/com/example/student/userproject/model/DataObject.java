@@ -8,10 +8,26 @@ import android.graphics.drawable.Icon;
 
 public class DataObject {
     private String title;
-    private String message;
     private String token;
-    private int icon;
-    private String time;
+    private String phone;
+    private double lat;
+    private double lng;
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
+    }
 
     public String getTitle() {
         return title;
@@ -19,14 +35,6 @@ public class DataObject {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public String getToken() {
@@ -37,19 +45,13 @@ public class DataObject {
         this.token = token;
     }
 
-    public int getIcon() {
-        return icon;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setIcon(int icon) {
-        this.icon = icon;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public String getTime() {
-        return time;
-    }
 
-    public void setTime(String time) {
-        this.time = time;
-    }
 }
