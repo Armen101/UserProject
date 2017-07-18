@@ -40,9 +40,6 @@ public class HomeActivity extends AppCompatActivity {
             return;
         }
 
-        String token = FirebaseInstanceId.getInstance().getToken();
-        Log.i("Tooooooooken", token);
-
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.container, MapFragment.newInstance())
                 .addToBackStack(null)

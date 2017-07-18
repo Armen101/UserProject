@@ -13,6 +13,7 @@
         map:uiZoomControls="true" />
 
     <Button
+        android:visibility="invisible"
         android:id="@+id/map_button"
         android:layout_width="50dp"
         android:layout_height="50dp"

@@ -1,11 +1,5 @@
 package com.example.student.userproject.model;
 
-import android.graphics.drawable.Icon;
-
-/**
- * Created by Student on 7/9/2017.
- */
-
 public class DataObject {
     private String title;
     private String token;

@@ -38,14 +38,13 @@
 
         <service android:name=".service.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <service
-            android:name=".service.MyFirebaseInstanceIDService">
+        <service android:name=".service.MyFirebaseInstanceIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
@@ -60,12 +59,10 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCcBdaZrSnAn0Gok3vDgRzRi4xmWocBYSw" />
+
+        android:value="@string/google_maps_key" />
+
         <service android:name=".service.LocationService" />
-
-            android:value="@string/google_maps_key" />
-
-        <service android:name=".service.LocationService" />
-
 
     </application>
 

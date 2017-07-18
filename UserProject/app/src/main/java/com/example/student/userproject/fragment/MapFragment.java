@@ -1,6 +1,5 @@
 package com.example.student.userproject.fragment;
 
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +27,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.student.userproject.service.LocationService;
 import com.example.student.userproject.model.PhotographInfo;
 import com.example.student.userproject.R;
+import com.example.student.userproject.utility.NetworkHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -73,13 +74,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private SupportMapFragment fragmentMap;
     private Button mBtn;
     private int counter = 5;
+    private Marker marker;
+    private boolean ok = false;
+    private Marker marker1;
 
     public static MapFragment newInstance() {
         return new MapFragment();
     }
 
     public MapFragment() {
-
     }
 
     @Override
@@ -96,24 +99,55 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         FirebaseDatabase dtabase = FirebaseDatabase.getInstance();
         mDatabaseRef = dtabase.getReference().child("photographs");
         photograpsList = new ArrayList<>();
-        SharedPreferences getPref = getActivity().getSharedPreferences("SharedPref", MODE_PRIVATE);
-        counter = getPref.getInt(SAVED_TEXT, 5);
         mBtn = (Button) rootV.findViewById(R.id.map_button);
-        mBtn.setText(String.valueOf(counter));
+
+        final SharedPreferences getPref = getActivity().getSharedPreferences("SharedPref", MODE_PRIVATE);
+        final SharedPreferences okey = getActivity().getSharedPreferences("OK", Context.MODE_PRIVATE);
+        ok = okey.getBoolean("OK", false);
+        if (ok) {
+            mBtn.setVisibility(View.VISIBLE);
+            counter = getPref.getInt(SAVED_TEXT, counter);
+            mBtn.setText(String.valueOf(counter));
+        }
         mBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences shared = getActivity().getSharedPreferences("PHOTOGRAPHER_UID", Context.MODE_PRIVATE);
+                String uid = shared.getString("uid", "");
                 counter--;
                 mBtn.setText(String.valueOf(counter));
                 if (counter == 0) {
                     mBtn.setEnabled(false);
+                    shared.edit().remove(uid).apply();
+                    okey.edit().putBoolean("OK", false).apply();
+                    mBtn.setVisibility(View.INVISIBLE);
+                    counter = 5;
                 }
+                mDatabaseRef.child(uid).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (marker1 != null) {
+                            marker1.remove();
+                            Log.i("ssss", "marker revmoved");
+                        }
+                        String name = dataSnapshot.child("name").getValue(String.class);
+                        double latitude = (double) dataSnapshot.child("latitude").getValue();
+                        double longitude = (double) dataSnapshot.child("longitude").getValue();
+                        LatLng latlng = new LatLng(latitude, longitude);
+                        marker1 = mMap.addMarker(new MarkerOptions().position(latlng).title(name));
+                        Log.i("ssss", "add marker");
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                    }
+                });
                 save();
+                NetworkHelper.sendNotificationRequest(getActivity(), uid, mLocation.getLatitude(), mLocation.getLongitude(), "-1");
             }
         });
         return rootV;
     }
-
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -143,7 +177,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (mBroadcastReceiver != null) {
             getActivity().unregisterReceiver(mBroadcastReceiver);
         }
-//        mMap.clear();
+        mMap.clear();
         getActivity().stopService(serviceIntent);
     }
 
@@ -227,7 +261,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     final PhotographInfo info = postSnepshot.getValue(PhotographInfo.class);
                     final LatLng latLng = getLatLng(info);
                     if (location.distanceTo(mLocation) >= DISTANCE) {
-                        final Marker marker = mMap.addMarker(
+                        marker = mMap.addMarker(
                                 new MarkerOptions().position(latLng).title(info.getName()));
                         marker.setTag(info);
                         mMap.setOnInfoWindowClickListener(

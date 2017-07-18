@@ -19,13 +19,19 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class NetworkHelper {
 
     private static final String SERVER_KEY = "AAAAXOlepJ4:APA91bG49WQvvZ4YDaT_Wf_n7cLXwhjjwoo0rVzuw-r3cIEE9FC2WvimfMEmxEK1aw7rdkIkMwPyDk0_BxWWf3XuCIDSnWKqE8v_4hHNpQQb85yCgmcH2mgC5lSJjcScGRRdBRkknFhI";
 
-   public static void sendNotificationRequest(Context context, String uid, double lat, double lng, String phoneNumber){
-        SharedPreferences getPref = context.getSharedPreferences("shared_key",Context.MODE_PRIVATE);
-        String token = getPref.getString("token_key","");
+    public static void sendNotificationRequest(Context context, String uid, double lat, double lng, String phoneNumber) {
+        SharedPreferences getPref = context.getSharedPreferences("shared_key", MODE_PRIVATE);
+        String token = getPref.getString("token_key", "");
+        SharedPreferences shared = context.getSharedPreferences("PHOTOGRAPHER_UID", MODE_PRIVATE);
+        SharedPreferences.Editor edit = shared.edit();
+        edit.putString("uid", uid);
+        edit.apply();
         Gson gson = new Gson();
         NotificationData notificationData = new NotificationData();
         DataObject dataObject = new DataObject();
@@ -33,7 +39,7 @@ public class NetworkHelper {
             dataObject.setLat(lat);
             dataObject.setLng(lng);
         }
-        if(phoneNumber != null) {
+        if (phoneNumber != null) {
             dataObject.setPhone(phoneNumber);
         }
         dataObject.setTitle("You have a new order!");

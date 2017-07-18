@@ -1,15 +1,20 @@
 package com.example.student.userproject.fragment;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,6 +36,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PhotographDetailInfoFragment extends Fragment implements View.OnClickListener {
+
+    public static final String MYPREF = "my_pref";
+    public static final String FAVORITE_KEY = "fav_key";
+    public static final int ADAPTER_TYPE_TOP = 1;
+
     private ImageView detailAvatar;
     private Button sendNotification;
     private TextView detailName;
@@ -39,20 +49,13 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
     private TextView detailPhone;
     private List<PhotographInfo> detailList;
     private boolean isFavorite;
-
     private PhotographInfo userInfo;
     private String uid;
     private ImageView imgFavorite;
     private SharedPreferences sheredPref;
-    
     private EditText etPhone;
     private Dialog alertDialog;
-
-    public static final String MYPREF = "my_pref";
-    public static final String FAVORITE_KEY = "fav_key";
-
     private ViewPager viewpagerCar;
-    public static final int ADAPTER_TYPE_TOP = 1;
 
     public PhotographDetailInfoFragment() {
     }
@@ -67,9 +70,6 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
 
         userInfo = Parcels.unwrap(getArguments().getParcelable("userInfo"));
         sheredPref = this.getActivity().getSharedPreferences(MYPREF, Context.MODE_PRIVATE);
-
-
-
     }
 
     @Override
@@ -211,9 +211,6 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        Bundle bundle = getArguments();
-        double lat = bundle.getDouble("lat");
-        double lng = bundle.getDouble("lng");
         switch (v.getId()){
             case R.id.send_notification:{
                 AlertDialog.Builder dialogBuilder = initDialog();
