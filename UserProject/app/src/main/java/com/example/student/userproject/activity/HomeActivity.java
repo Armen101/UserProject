@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.student.userproject.R;
 import com.example.student.userproject.fragment.FavoriteFragment;
 import com.example.student.userproject.fragment.MapFragment;
+import com.example.student.userproject.fragment.PostFragment;
 import com.example.student.userproject.utility.FavoritAdapterHelper;
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -61,6 +62,11 @@ public class HomeActivity extends AppCompatActivity {
                     case R.id.action_config: {
                         FavoritAdapterHelper.initFavoritList(HomeActivity.this);
                         selectedFragment = FavoriteFragment.newInstance();
+                        break;
+                    }
+
+                    case R.id.action_post: {
+                        selectedFragment = PostFragment.newInstance();
                         break;
                     }
                     case R.id.action_map: {
