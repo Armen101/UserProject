@@ -34,8 +34,6 @@ public class PostFragment extends Fragment {
     private DatabaseReference mDatabaseRef;
     private String uid;
 
-
-
     public PostFragment() {
 
     }
@@ -97,9 +95,7 @@ public class PostFragment extends Fragment {
                         .load(model.getAvatarUri())
                         .into(viewHolder.imgPost);
 
-
             }
-
         };
         postRecyclerView.setAdapter(postAdapter);
 
