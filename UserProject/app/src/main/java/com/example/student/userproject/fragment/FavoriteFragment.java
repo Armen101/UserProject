@@ -1,6 +1,5 @@
 package com.example.student.userproject.fragment;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,9 +16,7 @@ import com.example.student.userproject.utility.FavoritAdapterHelper;
 
 import org.parceler.Parcels;
 
-
 public class FavoriteFragment extends Fragment implements FavoritsRecyclerAdapter.OnItemClickFavorite {
-
 
     public FavoriteFragment() {
 
