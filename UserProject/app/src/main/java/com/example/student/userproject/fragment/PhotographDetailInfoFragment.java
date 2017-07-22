@@ -67,7 +67,6 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         userInfo = Parcels.unwrap(getArguments().getParcelable("userInfo"));
         sheredPref = this.getActivity().getSharedPreferences(MYPREF, Context.MODE_PRIVATE);
     }
@@ -76,7 +75,6 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_photograph_detail_info, container, false);
-
         findViewById(rootView);
         if (userInfo != null) {
             photographerInfo(userInfo);
@@ -93,6 +91,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
                 }
                 setupViewPager();
             }
+
             @Override
             public void onCancelled(DatabaseError error) {
             }
@@ -100,7 +99,6 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
 
         init(rootView);
         getFavoriteStatus();
-
         sendNotification.setOnClickListener(this);
         imgFavorite.setOnClickListener(this);
 
@@ -136,10 +134,11 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
             }
         });
     }
+
     private void getFavoriteStatus() {
         String getFavoriteStatus = sheredPref.getString(FAVORITE_KEY + uid, "");
         isFavorite = !getFavoriteStatus.equals("");
-        if(isFavorite) imgFavorite.setImageResource(R.drawable.ic_favorite_black_24dp);
+        if (isFavorite) imgFavorite.setImageResource(R.drawable.ic_favorite_black_24dp);
         else imgFavorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
     }
 
@@ -164,8 +163,8 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
         detailPhone = (TextView) rootView.findViewById(R.id.tv_detail_phone);
         imgFavorite = (ImageView) rootView.findViewById(R.id.btn_favorite);
     }
-    
-     private AlertDialog.Builder initDialog() {
+
+    private AlertDialog.Builder initDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         dialogBuilder.setTitle("Please set your phone");
         dialogBuilder.setView(getDialogLayout());
@@ -211,24 +210,24 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.send_notification:{
+        switch (v.getId()) {
+            case R.id.send_notification: {
                 AlertDialog.Builder dialogBuilder = initDialog();
                 alertDialog = dialogBuilder.create();
                 alertDialog.show();
                 break;
             }
-            case R.id.btn_favorite:{
-                if(isFavorite){
-                    Log.i("==== ","Favorite --> is  to not");
+            case R.id.btn_favorite: {
+                if (isFavorite) {
+                    Log.i("==== ", "Favorite --> is  to not");
                     imgFavorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                     SharedPreferences.Editor editor = sheredPref.edit();
                     editor.putString(FAVORITE_KEY + uid, "");
                     isFavorite = false;
                     editor.apply();
 
-                }else{
-                    Log.i("==== ","Favorite --> not to is");
+                } else {
+                    Log.i("==== ", "Favorite --> not to is");
                     imgFavorite.setImageResource(R.drawable.ic_favorite_black_24dp);
                     SharedPreferences.Editor editor = sheredPref.edit();
                     editor.putString(FAVORITE_KEY + uid, uid);

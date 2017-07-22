@@ -2,7 +2,7 @@ package com.example.student.userproject.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +12,9 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.student.userproject.fragment.FullScreenFragment;
 import com.example.student.userproject.R;
 import com.example.student.userproject.activity.HomeActivity;
+import com.example.student.userproject.fragment.FullScreenFragment;
 import com.example.student.userproject.model.PhotographInfo;
 
 import java.io.Serializable;
@@ -46,15 +46,14 @@ public class CarouselPagerAdapter extends PagerAdapter {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Fragment fullScreenFragment = FullScreenFragment.newInstance();
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("images", (Serializable) mInfoList);
                     bundle.putInt("position", position);
-                    fullScreenFragment.setArguments(bundle);
 
-                    ((HomeActivity) mContext).getSupportFragmentManager().
-                            beginTransaction().replace(R.id.container, fullScreenFragment)
-                            .commit();
+                    FragmentTransaction ft = ((HomeActivity) mContext).getSupportFragmentManager().beginTransaction();
+                    FullScreenFragment newFragment = FullScreenFragment.newInstance();
+                    newFragment.setArguments(bundle);
+                    newFragment.show(ft, "CaruselPagerAdapter");
 
                     Toast.makeText(mContext, "click on full_screen_item " + position, Toast.LENGTH_LONG).show();
                 }

@@ -19,14 +19,13 @@ import java.util.List;
 public class FullScreenFragment extends DialogFragment {
 
     private ViewPager fullViewPager;
-    private List<PhotographInfo>infoList;
-    private static FullScreenFragment instance;
+    private List<PhotographInfo> infoList;
+
+    public FullScreenFragment() {
+    }
 
     public static FullScreenFragment newInstance() {
-        if(instance == null){
-            instance = new FullScreenFragment();
-        }
-        return instance;
+        return new FullScreenFragment();
     }
 
     @Override
@@ -48,7 +47,6 @@ public class FullScreenFragment extends DialogFragment {
     }
 
     private void setCurrentItem(int position) {
-
         fullViewPager.setCurrentItem(position, false);
     }
 
@@ -56,7 +54,6 @@ public class FullScreenFragment extends DialogFragment {
 
         @Override
         public void onPageSelected(int position) {
-
             fullViewPager.setCurrentItem(position, false);
         }
 
@@ -78,7 +75,6 @@ public class FullScreenFragment extends DialogFragment {
     }
 
     private class MyViewPagerAdapter extends PagerAdapter {
-
         private LayoutInflater layoutInflater;
 
         MyViewPagerAdapter() {
@@ -95,7 +91,6 @@ public class FullScreenFragment extends DialogFragment {
                     .load(infoList.get(position).getImageUri())
                     .into(imageViewPreview);
             container.addView(rootView);
-
             return rootView;
         }
 
@@ -113,5 +108,6 @@ public class FullScreenFragment extends DialogFragment {
         public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView((View) object);
         }
+
     }
 }

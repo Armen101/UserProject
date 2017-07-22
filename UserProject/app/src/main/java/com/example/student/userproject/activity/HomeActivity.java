@@ -65,11 +65,11 @@ public class HomeActivity extends AppCompatActivity {
                 Fragment selectedFragment = null;
                 switch (item.getItemId()) {
                     case R.id.action_config: {
-                        actionConfig.setEnabled(false);
-                        actionMap.setEnabled(true);
-                        actionPost.setEnabled(false);
                         FavoritAdapterHelper.initFavoritList(HomeActivity.this);
                         selectedFragment = FavoriteFragment.newInstance();
+                        actionConfig.setEnabled(false);
+                        actionMap.setEnabled(true);
+                        actionPost.setEnabled(true);
                         break;
                     }
 
@@ -81,8 +81,8 @@ public class HomeActivity extends AppCompatActivity {
                         break;
                     }
                     case R.id.action_map: {
-                        actionMap.setEnabled(false);
                         selectedFragment = MapFragment.newInstance();
+                        actionMap.setEnabled(false);
                         actionPost.setEnabled(true);
                         actionConfig.setEnabled(true);
                         break;
