@@ -4,74 +4,49 @@ package com.example.student.userproject.model;
 import java.util.Date;
 
 public class PostModel {
-    private String postId;
-    private String avatarUri;
+
+    private long date;
+    private String imageUrl;
+    private long likes;
     private String title;
+    private String userName;
     private String uid;
-    private Date time;
-    private String name;
-    private long likesCount;
 
     public PostModel() {
 
     }
 
-    public PostModel(String postId, String avatarUri, String title, String uid, Date time, String name, long likesCount) {
-        this.postId = postId;
-        this.avatarUri = avatarUri;
+    public PostModel(long date, String imageUrl, long likes, String title, String userName, String uid) {
+        this.date = date;
+        this.imageUrl = imageUrl;
+        this.likes = likes;
         this.title = title;
-        this.uid = uid;
-        this.time = time;
-        this.name = name;
-        this.likesCount = likesCount;
-    }
-
-    public String getPostId() {
-        return postId;
-    }
-
-    public void setPostId(String postId) {
-        this.postId = postId;
-    }
-
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
-    }
-
-    public long getLikesCount() {
-        return likesCount;
-    }
-
-    public void setLikesCount(long likesCount) {
-        this.likesCount = likesCount;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
+        this.userName = userName;
         this.uid = uid;
     }
 
-    public String getAvatarUri() {
-        return avatarUri;
+    public long getDate() {
+        return date;
     }
 
-    public void setAvatarUri(String avatarUri) {
-        this.avatarUri = avatarUri;
+    public void setDate(long date) {
+        this.date = date;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public long getLikes() {
+        return likes;
+    }
+
+    public void setLikes(long likes) {
+        this.likes = likes;
     }
 
     public String getTitle() {
@@ -82,7 +57,21 @@ public class PostModel {
         this.title = title;
     }
 
+    public String getUserName() {
+        return userName;
+    }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 }
 
 
