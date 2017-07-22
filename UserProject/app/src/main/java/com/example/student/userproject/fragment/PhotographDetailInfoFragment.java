@@ -2,9 +2,14 @@ package com.example.student.userproject.fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -19,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.student.userproject.Manifest;
 import com.example.student.userproject.adapter.CarouselPagerAdapter;
 import com.example.student.userproject.utility.CarouselTransformer;
 import com.example.student.userproject.utility.NetworkHelper;
@@ -56,6 +62,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
     private EditText etPhone;
     private Dialog alertDialog;
     private ViewPager viewpagerCar;
+    private ImageView imageViewPhone;
 
     public PhotographDetailInfoFragment() {
     }
@@ -101,6 +108,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
         getFavoriteStatus();
         sendNotification.setOnClickListener(this);
         imgFavorite.setOnClickListener(this);
+        imageViewPhone.setOnClickListener(this);
 
         return rootView;
     }
@@ -162,6 +170,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
         detailCameraInfo = (TextView) rootView.findViewById(R.id.tv_detail_camera_info);
         detailPhone = (TextView) rootView.findViewById(R.id.tv_detail_phone);
         imgFavorite = (ImageView) rootView.findViewById(R.id.btn_favorite);
+        imageViewPhone = (ImageView) rootView.findViewById(R.id.phone_img);
     }
 
     private AlertDialog.Builder initDialog() {
@@ -234,8 +243,20 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
                     isFavorite = true;
                     editor.apply();
                 }
+                break;
             }
-            break;
+            case R.id.phone_img: {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:" + detailPhone.getText()));
+
+                if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.CALL_PHONE}, 1);
+                    return;
+                }
+                startActivity(callIntent);
+                break;
+            }
+
         }
     }
 }
