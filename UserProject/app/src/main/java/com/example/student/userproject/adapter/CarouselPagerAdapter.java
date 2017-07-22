@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.student.userproject.R;
@@ -20,18 +20,15 @@ import com.example.student.userproject.model.PhotographInfo;
 import java.io.Serializable;
 import java.util.List;
 
-import static com.example.student.userproject.fragment.PhotographDetailInfoFragment.ADAPTER_TYPE_TOP;
-
 public class CarouselPagerAdapter extends PagerAdapter {
 
     private Context mContext;
     private List<PhotographInfo> mInfoList;
-    private int mAdapterType;
+    private TextView galleryTitle;
 
-    public CarouselPagerAdapter(Context context, List<PhotographInfo> mInfoList, int adapterType) {
+    public CarouselPagerAdapter(Context context, List<PhotographInfo> mInfoList) {
         this.mContext = context;
         this.mInfoList = mInfoList;
-        this.mAdapterType = adapterType;
     }
 
     @Override
@@ -40,7 +37,8 @@ public class CarouselPagerAdapter extends PagerAdapter {
         try {
 
             RelativeLayout relMain = (RelativeLayout) view.findViewById(R.id.rel_main);
-            ImageView image = (ImageView) view.findViewById(R.id.image);
+            galleryTitle =(TextView) view.findViewById(R.id.gallery_title);
+            ImageView image = (ImageView) view.findViewById(R.id.gallery_image);
             relMain.setTag(position);
 
             view.setOnClickListener(new View.OnClickListener() {
@@ -54,20 +52,13 @@ public class CarouselPagerAdapter extends PagerAdapter {
                     FullScreenFragment newFragment = FullScreenFragment.newInstance();
                     newFragment.setArguments(bundle);
                     newFragment.show(ft, "CaruselPagerAdapter");
-
-                    Toast.makeText(mContext, "click on full_screen_item " + position, Toast.LENGTH_LONG).show();
                 }
             });
-
-            switch (mAdapterType) {
-                case ADAPTER_TYPE_TOP:
-                    relMain.setBackgroundResource(R.drawable.shadow);
-                    break;
-            }
 
             Glide.with(mContext)
                     .load(mInfoList.get(position).getImageUri())
                     .into(image);
+            galleryTitle.setText(mInfoList.get(position).getTitle());
             container.addView(view);
 
         } catch (Exception e) {

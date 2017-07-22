@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.student.userproject.R;
@@ -20,6 +21,8 @@ public class FullScreenFragment extends DialogFragment {
 
     private ViewPager fullViewPager;
     private List<PhotographInfo> infoList;
+    private TextView galleryTitleFull;
+    private int mSelectedPosition;
 
     public FullScreenFragment() {
     }
@@ -35,7 +38,8 @@ public class FullScreenFragment extends DialogFragment {
         View rootView = inflater.inflate(R.layout.fragment_full_screen, container, false);
         fullViewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
         infoList = (List<PhotographInfo>) getArguments().getSerializable("images");
-        int mSelectedPosition = getArguments().getInt("position");
+
+        mSelectedPosition = getArguments().getInt("position");
 
         MyViewPagerAdapter mAdapter = new MyViewPagerAdapter();
         fullViewPager.setAdapter(mAdapter);
@@ -54,7 +58,7 @@ public class FullScreenFragment extends DialogFragment {
 
         @Override
         public void onPageSelected(int position) {
-            fullViewPager.setCurrentItem(position, false);
+
         }
 
         @Override
@@ -83,13 +87,14 @@ public class FullScreenFragment extends DialogFragment {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-
             layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rootView = layoutInflater.inflate(R.layout.image_fullscreen, container, false);
             ImageView imageViewPreview = (ImageView) rootView.findViewById(R.id.image_full_screen);
+            galleryTitleFull = (TextView) rootView.findViewById(R.id.gallery_title_full);
             Glide.with(getActivity())
                     .load(infoList.get(position).getImageUri())
                     .into(imageViewPreview);
+            galleryTitleFull.setText(infoList.get(position).getTitle());
             container.addView(rootView);
             return rootView;
         }

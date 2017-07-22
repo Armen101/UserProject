@@ -5,4 +5,5 @@
 
     <dimen name="pager_margin">5dp</dimen>
     <dimen name="viewPagerMargin">150dp</dimen>
+
 </resources>

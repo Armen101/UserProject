@@ -10,7 +10,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -53,12 +52,6 @@ public class HomeActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.navigation);
 
-        Menu menuNav = bottomNavigationView.getMenu();
-        final MenuItem actionMap = menuNav.findItem(R.id.action_map);
-        final MenuItem actionPost = menuNav.findItem(R.id.action_post);
-        final MenuItem actionConfig = menuNav.findItem(R.id.action_config);
-
-
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -67,24 +60,14 @@ public class HomeActivity extends AppCompatActivity {
                     case R.id.action_config: {
                         FavoritAdapterHelper.initFavoritList(HomeActivity.this);
                         selectedFragment = FavoriteFragment.newInstance();
-                        actionConfig.setEnabled(false);
-                        actionMap.setEnabled(true);
-                        actionPost.setEnabled(true);
                         break;
                     }
-
                     case R.id.action_post: {
                         selectedFragment = PostFragment.newInstance();
-                        actionPost.setEnabled(false);
-                        actionMap.setEnabled(true);
-                        actionConfig.setEnabled(true);
                         break;
                     }
                     case R.id.action_map: {
                         selectedFragment = MapFragment.newInstance();
-                        actionMap.setEnabled(false);
-                        actionPost.setEnabled(true);
-                        actionConfig.setEnabled(true);
                         break;
                     }
                 }

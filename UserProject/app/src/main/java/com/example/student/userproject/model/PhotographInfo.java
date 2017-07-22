@@ -15,6 +15,7 @@ public class PhotographInfo {
     private String avatarUri;
     private String title;
     private String uid;
+    private int rating;
     private double latitude;
     private double longitude;
 
@@ -23,7 +24,7 @@ public class PhotographInfo {
 
     public PhotographInfo(String name, String phone, String address, String camera_info,
                           String imageUri, String avatarUri, String title, String uid,
-                          double latitude, double longitude) {
+                          int rating, double latitude, double longitude) {
         this.name = name;
         this.phone = phone;
         this.address = address;
@@ -34,6 +35,7 @@ public class PhotographInfo {
         this.uid = uid;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.rating = rating;
     }
 
     public String getName() {
@@ -48,36 +50,41 @@ public class PhotographInfo {
         return phone;
     }
 
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
 
     public String getAddress() {
         return address;
     }
 
-
     public String getCamera_info() {
         return camera_info;
     }
-
 
     public String getImageUri() {
         return imageUri;
     }
 
-
     public String getAvatarUri() {
         return avatarUri;
     }
-
 
     public String getTitle() {
         return title;
     }
 
-
     public String getUid() {
         return uid;
     }
-
 
     public double getLatitude() {
         return latitude;

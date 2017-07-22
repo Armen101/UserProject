@@ -21,17 +21,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.student.userproject.Manifest;
+import com.example.student.userproject.R;
 import com.example.student.userproject.adapter.CarouselPagerAdapter;
+import com.example.student.userproject.model.PhotographInfo;
 import com.example.student.userproject.utility.CarouselTransformer;
 import com.example.student.userproject.utility.NetworkHelper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.example.student.userproject.model.PhotographInfo;
-import com.example.student.userproject.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -45,7 +45,6 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
 
     public static final String MYPREF = "my_pref";
     public static final String FAVORITE_KEY = "fav_key";
-    public static final int ADAPTER_TYPE_TOP = 1;
 
     private ImageView detailAvatar;
     private Button sendNotification;
@@ -63,6 +62,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
     private Dialog alertDialog;
     private ViewPager viewpagerCar;
     private ImageView imageViewPhone;
+    private RatingBar ratingBar;
 
     public PhotographDetailInfoFragment() {
     }
@@ -114,7 +114,6 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
     }
 
     private void init(View rootView) {
-
         viewpagerCar = (ViewPager) rootView.findViewById(R.id.view_pager_car);
         viewpagerCar.setClipChildren(false);
         viewpagerCar.setPageMargin(getResources().getDimensionPixelOffset(R.dimen.pager_margin));
@@ -123,7 +122,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
     }
 
     private void setupViewPager() {
-        CarouselPagerAdapter adapter = new CarouselPagerAdapter(getContext(), detailList, ADAPTER_TYPE_TOP);
+        CarouselPagerAdapter adapter = new CarouselPagerAdapter(getContext(), detailList);
         viewpagerCar.setAdapter(adapter);
         viewpagerCar.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             private int index = 0;
@@ -157,6 +156,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
         detailPhone.setText(photographInfo.getPhone());
         detailAddress.setText(photographInfo.getAddress());
         uid = photographInfo.getUid();
+        ratingBar.setProgress(photographInfo.getRating());
         Glide.with(getActivity())
                 .load(photographInfo.getAvatarUri())
                 .into(detailAvatar);
@@ -171,6 +171,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
         detailPhone = (TextView) rootView.findViewById(R.id.tv_detail_phone);
         imgFavorite = (ImageView) rootView.findViewById(R.id.btn_favorite);
         imageViewPhone = (ImageView) rootView.findViewById(R.id.phone_img);
+        ratingBar = (RatingBar) rootView.findViewById(R.id.rating_bar);
     }
 
     private AlertDialog.Builder initDialog() {
@@ -256,7 +257,6 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
                 startActivity(callIntent);
                 break;
             }
-
         }
     }
 }
