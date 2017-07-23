@@ -2,6 +2,7 @@ package com.example.student.userproject.fragment;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.student.userproject.R;
 import com.example.student.userproject.model.PostModel;
+import com.example.student.userproject.utility.Constants;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,22 +25,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import static com.google.android.gms.internal.zzt.TAG;
 
 public class PostFragment extends Fragment {
 
-    private List<PostModel> postModelList;
-    private RecyclerView postRecyclerView;
-    private DatabaseReference mDatabaseRef;
-    private String uid;
-    private boolean isFirstClicked = true;
+    private DatabaseReference mDatabaseRef;private boolean isFirstClicked = true;
 
 
     public PostFragment() {
@@ -60,49 +55,63 @@ public class PostFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_post, container, false);
-        initPostModelList();
-        postRecyclerView = (RecyclerView) rootView.findViewById(R.id.post_recycler_view);
+        RecyclerView postRecyclerView = (RecyclerView) rootView.findViewById(R.id.post_recycler_view);
         LinearLayoutManager lm = new LinearLayoutManager(getActivity());
         postRecyclerView.setLayoutManager(lm);
         postRecyclerView.setHasFixedSize(true);
-        FirebaseRecyclerAdapter<PostModel, PostHolder> postAdapter = new FirebaseRecyclerAdapter<PostModel, PostHolder>(
-                PostModel.class,
-                R.layout.post_recycler_row_item,
-                PostHolder.class,
-                mDatabaseRef
-        ) {
-            @Override
-            protected void populateViewHolder(final PostHolder viewHolder, final PostModel model, int position) {
-                viewHolder.tvUserName.setText(model.getUserName());
-                long date = model.getDate();
-                viewHolder.tvPostTime.setText(getCurrentDate(date, "dd/MM/yyyy hh:mm"));
-                viewHolder.tvPostTitle.setText(model.getTitle());
-                viewHolder.tvLikesCount.setText(String.valueOf(model.getLikes()));
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+        postRecyclerView.setAdapter(getFirebaseRecyclerAdapter());
+        return rootView;
+    }
 
+    @NonNull
+    private FirebaseRecyclerAdapter<PostModel, PostHolder> getFirebaseRecyclerAdapter() {
+        return new FirebaseRecyclerAdapter<PostModel, PostHolder>(
+                    PostModel.class,
+                    R.layout.post_recycler_row_item,
+                    PostHolder.class,
+                    mDatabaseRef.child(Constants.POSTS)) {
+                @Override
+                protected void populateViewHolder(final PostHolder viewHolder, final PostModel model, int position) {
+                    viewHolder.tvUserName.setText(model.getUserName());
+                    long date = model.getDate();
+                    viewHolder.tvPostTime.setText(getCurrentDate(date, "dd/MM/yyyy hh:mm"));
+                    viewHolder.tvPostTitle.setText(model.getTitle());
+                    viewHolder.tvLikesCount.setText(String.valueOf(model.getLikes()));
+                    viewHolder.imgLike.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (isFirstClicked) {
+                                isFirstClicked = false;
+                                updateNumLikes(model.getUid());
+                                updateUserRating(model.getUserId());
+                                Toast.makeText(getActivity(), "liked", Toast.LENGTH_SHORT).show();
+                            } else {
+                                viewHolder.imgLike.setEnabled(false);
+                            }
+                        }
+                    });
 
-                viewHolder.imgLike.setOnClickListener(new View.OnClickListener() {
+                    Glide.with(getActivity())
+                            .load(model.getImageUrl())
+                            .into(viewHolder.imgPost);
+
+                }
+            };
+    }
+
+    private void updateUserRating(String userId) {
+        mDatabaseRef.child(Constants.PHOTOGRAPHS).child(userId).child(Constants.RATING)
+                .runTransaction(new Transaction.Handler() {
+                    @Override
+                    public Transaction.Result doTransaction(MutableData mutableData) {
+                        return getResult(mutableData);
+                    }
 
                     @Override
-                    public void onClick(View v) {
-                        if (isFirstClicked) {
-                            updateNumLikes(model.getUid());
-                            Toast.makeText(getActivity(), "liked", Toast.LENGTH_SHORT).show();
-                        } else {
-                            viewHolder.imgLike.setEnabled(false);
-                            isFirstClicked = true;
-                        }
+                    public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
                     }
                 });
-
-                Glide.with(getActivity())
-                        .load(model.getImageUrl())
-                        .into(viewHolder.imgPost);
-
-            }
-        };
-        postRecyclerView.setAdapter(postAdapter);
-
-        return rootView;
     }
 
 
@@ -115,16 +124,12 @@ public class PostFragment extends Fragment {
         return formatter.format(calendar.getTime());
     }
 
-    private void updateNumLikes(String uid) { // likeri qanakna update anum
-        mDatabaseRef.child(uid).child("likes")
+    private void updateNumLikes(String uid) {
+        mDatabaseRef.child(Constants.POSTS).child(uid).child(Constants.LIKES)
                 .runTransaction(new Transaction.Handler() {
                     @Override
                     public Transaction.Result doTransaction(MutableData mutableData) {
-                        long num = (long) mutableData.getValue();
-                        num++;
-                        mutableData.setValue(num);
-                        isFirstClicked = false;
-                        return Transaction.success(mutableData);
+                        return getResult(mutableData);
                     }
 
                     @Override
@@ -134,32 +139,21 @@ public class PostFragment extends Fragment {
                 });
     }
 
-    private void initPostModelList() {
-        postModelList = new ArrayList<>();
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("posts");
-        mDatabaseRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnepshot : dataSnapshot.getChildren()) {
-                    final PostModel info = postSnepshot.getValue(PostModel.class);
-                    postModelList.add(info);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+    @NonNull
+    private Transaction.Result getResult(MutableData mutableData) {
+        long num = (long) mutableData.getValue();
+        num++;
+        mutableData.setValue(num);
+        return Transaction.success(mutableData);
     }
 
-    public static class PostHolder extends RecyclerView.ViewHolder {
-
-        TextView tvUserName;
-        TextView tvPostTitle;
-        TextView tvPostTime;
-        TextView tvLikesCount;
-        ImageView imgPost;
-        ImageView imgLike;
+    private static class PostHolder extends RecyclerView.ViewHolder {
+        private TextView tvUserName;
+        private TextView tvPostTitle;
+        private TextView tvPostTime;
+        private TextView tvLikesCount;
+        private ImageView imgPost;
+        private ImageView imgLike;
 
         public PostHolder(View itemView) {
             super(itemView);
@@ -170,13 +164,7 @@ public class PostFragment extends Fragment {
             tvLikesCount = (TextView) itemView.findViewById(R.id.tv_likes_count);
             imgPost = (ImageView) itemView.findViewById(R.id.post_image);
             imgLike = (ImageView) itemView.findViewById(R.id.img_like);
-
-        }
-
-        public void setNumLikes(long num) {
-            tvLikesCount.setText(String.valueOf(num));
         }
     }
-
 
 }

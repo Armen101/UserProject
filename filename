@@ -1,0 +1,72 @@
+diff --git a/UserProject/app/src/main/java/com/example/student/userproject/fragment/PostFragment.java b/UserProject/app/src/main/java/com/example/student/userproject/fragment/PostFragment.java
+index fc6a0ee..760faa7 100644
+--- a/UserProject/app/src/main/java/com/example/student/userproject/fragment/PostFragment.java
++++ b/UserProject/app/src/main/java/com/example/student/userproject/fragment/PostFragment.java
+@@ -86,6 +86,7 @@ public class PostFragment extends Fragment {
+                     public void onClick(View v) {
+                         if (isFirstClicked) {
+                             updateNumLikes(model.getUid());
++                            updateUserRating(model.getUserId());
+                             Toast.makeText(getActivity(), "liked", Toast.LENGTH_SHORT).show();
+                         } else {
+                             viewHolder.imgLike.setEnabled(false);
+@@ -105,6 +106,24 @@ public class PostFragment extends Fragment {
+         return rootView;
+     }
+ 
++    private void updateUserRating(String userId) {
++        mDatabaseRef.child(userId).child("rating")
++                .runTransaction(new Transaction.Handler() {
++                    @Override
++                    public Transaction.Result doTransaction(MutableData mutableData) {
++                        long num = (long) mutableData.getValue();
++                        num++;
++                        mutableData.setValue(num);
++                        return Transaction.success(mutableData);
++                    }
++
++                    @Override
++                    public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
++
++                    }
++                });
++    }
++
+ 
+     public static String getCurrentDate(long milliSeconds, String dateFormat) {
+         // Create a DateFormatter object for displaying date in specified format.
+diff --git a/UserProject/app/src/main/java/com/example/student/userproject/model/PostModel.java b/UserProject/app/src/main/java/com/example/student/userproject/model/PostModel.java
+index 1dfa43d..56b06ba 100644
+--- a/UserProject/app/src/main/java/com/example/student/userproject/model/PostModel.java
++++ b/UserProject/app/src/main/java/com/example/student/userproject/model/PostModel.java
+@@ -11,18 +11,29 @@ public class PostModel {
+     private String title;
+     private String userName;
+     private String uid;
++    private String userId;
++
+ 
+     public PostModel() {
+ 
+     }
+ 
+-    public PostModel(long date, String imageUrl, long likes, String title, String userName, String uid) {
++    public PostModel(long date, String imageUrl, long likes, String title, String userName, String uid, String userId) {
+         this.date = date;
+         this.imageUrl = imageUrl;
+         this.likes = likes;
+         this.title = title;
+         this.userName = userName;
+         this.uid = uid;
++        this.userId = userId;
++    }
++
++    public String getUserId() {
++        return userId;
++    }
++
++    public void setUserId(String userId) {
++        this.userId = userId;
+     }
+ 
+     public long getDate() {
