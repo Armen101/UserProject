@@ -26,6 +26,7 @@ import com.example.student.userproject.R;
 import com.example.student.userproject.activity.HomeActivity;
 import com.example.student.userproject.model.PhotographInfo;
 import com.example.student.userproject.service.LocationService;
+import com.example.student.userproject.utility.Constants;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -92,7 +93,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         FirebaseDatabase dtabase = FirebaseDatabase.getInstance();
-        mDatabaseRef = dtabase.getReference().child("photographs");
+        mDatabaseRef = dtabase.getReference().child(Constants.PHOTOGRAPHS);
         photograpsList = new ArrayList<>();
 
         okey = getActivity().getSharedPreferences("OK", Context.MODE_PRIVATE);

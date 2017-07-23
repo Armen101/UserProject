@@ -29,6 +29,7 @@ import com.example.student.userproject.R;
 import com.example.student.userproject.adapter.CarouselPagerAdapter;
 import com.example.student.userproject.model.PhotographInfo;
 import com.example.student.userproject.utility.CarouselTransformer;
+import com.example.student.userproject.utility.Constants;
 import com.example.student.userproject.utility.NetworkHelper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,8 +44,7 @@ import java.util.List;
 
 public class PhotographDetailInfoFragment extends Fragment implements View.OnClickListener {
 
-    public static final String MYPREF = "my_pref";
-    public static final String FAVORITE_KEY = "fav_key";
+
 
     private ImageView detailAvatar;
     private Button sendNotification;
@@ -57,7 +57,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
     private PhotographInfo userInfo;
     private String uid;
     private ImageView imgFavorite;
-    private SharedPreferences sheredPref;
+    private SharedPreferences sharedPref;
     private EditText etPhone;
     private Dialog alertDialog;
     private ViewPager viewpagerCar;
@@ -75,7 +75,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userInfo = Parcels.unwrap(getArguments().getParcelable("userInfo"));
-        sheredPref = this.getActivity().getSharedPreferences(MYPREF, Context.MODE_PRIVATE);
+        sharedPref = this.getActivity().getSharedPreferences(Constants.FAVORITES_PREF, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -87,8 +87,8 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
             photographerInfo(userInfo);
         }
         FirebaseDatabase mDtabase = FirebaseDatabase.getInstance();
-        DatabaseReference mDatabaseRef = mDtabase.getReference().child("photographs").child(uid);
-        DatabaseReference mDatabaseGalleryRef = mDatabaseRef.child("gallery");
+        DatabaseReference mDatabaseRef = mDtabase.getReference().child(Constants.PHOTOGRAPHS).child(uid);
+        DatabaseReference mDatabaseGalleryRef = mDatabaseRef.child(Constants.GALLERY);
         mDatabaseGalleryRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -143,7 +143,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
     }
 
     private void getFavoriteStatus() {
-        String getFavoriteStatus = sheredPref.getString(FAVORITE_KEY + uid, "");
+        String getFavoriteStatus = sharedPref.getString(Constants.FAVORITE_KEY + uid, "");
         isFavorite = !getFavoriteStatus.equals("");
         if (isFavorite) imgFavorite.setImageResource(R.drawable.ic_favorite_black_24dp);
         else imgFavorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
@@ -231,16 +231,16 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
                 if (isFavorite) {
                     Log.i("==== ", "Favorite --> is  to not");
                     imgFavorite.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                    SharedPreferences.Editor editor = sheredPref.edit();
-                    editor.putString(FAVORITE_KEY + uid, "");
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString(Constants.FAVORITE_KEY + uid, "");
                     isFavorite = false;
                     editor.apply();
 
                 } else {
                     Log.i("==== ", "Favorite --> not to is");
                     imgFavorite.setImageResource(R.drawable.ic_favorite_black_24dp);
-                    SharedPreferences.Editor editor = sheredPref.edit();
-                    editor.putString(FAVORITE_KEY + uid, uid);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString(Constants.FAVORITE_KEY + uid, uid);
                     isFavorite = true;
                     editor.apply();
                 }

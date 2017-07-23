@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.example.student.userproject.fragment.PhotographDetailInfoFragment.MYPREF;
+
 
 public class FavoritAdapterHelper {
 
@@ -28,7 +28,7 @@ public class FavoritAdapterHelper {
 
         listFavorits = new ArrayList<>();
         DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("photographs");
-        final SharedPreferences sheredPref = context.getSharedPreferences(MYPREF, Context.MODE_PRIVATE);
+        final SharedPreferences sheredPref = context.getSharedPreferences(Constants.FAVORITES_PREF, Context.MODE_PRIVATE);
 
         final Map<String, ?> allEntries = sheredPref.getAll();
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
