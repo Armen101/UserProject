@@ -8,9 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -30,6 +28,7 @@ public class HomeActivity extends AppCompatActivity {
     public static final String TAG_MAP = "MAP_FRAGMENT";
     public static final String TAG_POSTS = "POSTS_FRAGMENT";
     public static final String TAG_FAVORITE = "FAVORITE_FRAGMENT";
+
     private String tag = TAG_MAP;
 
     @Override
@@ -48,9 +47,10 @@ public class HomeActivity extends AppCompatActivity {
                         android.Manifest.permission.ACCESS_FINE_LOCATION}, 10);
             }
             return;
+        } else {
+            initFirstFragment(MapFragment.newInstance(), tag);
+            initBottomNavigationBar();
         }
-        initFirstFragment(MapFragment.newInstance(), tag);
-        initBottomNavigationBar();
     }
 
     private void initFirstFragment(Fragment fragment, String tag) {
@@ -125,20 +125,15 @@ public class HomeActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED
                         && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+                    initFirstFragment(MapFragment.newInstance(), tag);
+                    initBottomNavigationBar();
                 } else {
                     Toast.makeText(this, "Permissions is enabled", Toast.LENGTH_LONG).show();
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
                 }
                 return;
             }
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
-
 
     @Override
     public void onBackPressed() {
