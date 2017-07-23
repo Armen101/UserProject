@@ -11,18 +11,29 @@ public class PostModel {
     private String title;
     private String userName;
     private String uid;
+    private String userId;
+
 
     public PostModel() {
 
     }
 
-    public PostModel(long date, String imageUrl, long likes, String title, String userName, String uid) {
+    public PostModel(long date, String imageUrl, long likes, String title, String userName, String uid, String userId) {
         this.date = date;
         this.imageUrl = imageUrl;
         this.likes = likes;
         this.title = title;
         this.userName = userName;
         this.uid = uid;
+        this.userId = userId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public long getDate() {
