@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.student.userproject.R;
+import com.example.student.userproject.activity.HomeActivity;
 import com.example.student.userproject.model.PhotographInfo;
 import com.example.student.userproject.service.LocationService;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -127,8 +128,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onDestroy() {
-        shared.edit().remove(uid).apply();
-        okey.edit().putBoolean("OK", false).apply();
+        if (shared != null && okey != null) {
+            shared.edit().remove(uid).apply();
+            okey.edit().putBoolean("OK", false).apply();
+        }
         super.onDestroy();
         if (mBroadcastReceiver != null) {
             getActivity().unregisterReceiver(mBroadcastReceiver);
@@ -171,7 +174,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         PhotographDetailInfoFragment fr = new PhotographDetailInfoFragment();
         fr.setArguments(bundle);
         fragmentManager.beginTransaction()
-                .replace(R.id.container, fr)
+                .replace(R.id.container, fr, "DETAIL_FRAGMENT")
                 .addToBackStack(null)
                 .commit();
     }
