@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.example.student.userproject.R;
 import com.example.student.userproject.fragment.FavoriteFragment;
 import com.example.student.userproject.fragment.MapFragment;
+import com.example.student.userproject.fragment.PhotographDetailInfoFragment;
 import com.example.student.userproject.fragment.PostFragment;
 import com.example.student.userproject.utility.FavoritAdapterHelper;
 
@@ -106,6 +108,12 @@ public class HomeActivity extends AppCompatActivity {
         if (tag.equals(TAG_FAVORITE)) {
             itemFavorite.setEnabled(false);
         } else itemFavorite.setEnabled(true);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("DETAILS_FRAGMENT");
+        if (fragment instanceof PhotographDetailInfoFragment) {
+            itemMap.setEnabled(true);
+            itemPost.setEnabled(true);
+            itemFavorite.setEnabled(true);
+        }
     }
 
     @Override

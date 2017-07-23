@@ -54,7 +54,7 @@ public class FavoriteFragment extends Fragment implements FavoritsRecyclerAdapte
         PhotographDetailInfoFragment fr = new PhotographDetailInfoFragment();
         fr.setArguments(bundle);
         fragmentManager.beginTransaction()
-                .replace(R.id.container, fr)
+                .replace(R.id.container, fr, "DETAILS_FRAGMENT")
                 .addToBackStack(null)
                 .commit();
     }
