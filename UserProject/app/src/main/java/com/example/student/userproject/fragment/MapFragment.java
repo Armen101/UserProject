@@ -175,7 +175,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         PhotographDetailInfoFragment fr = new PhotographDetailInfoFragment();
         fr.setArguments(bundle);
         fragmentManager.beginTransaction()
-                .replace(R.id.container, fr, "DETAIL_FRAGMENT")
+                .replace(R.id.container, fr, "DETAILS_FRAGMENT")
                 .addToBackStack(null)
                 .commit();
     }
