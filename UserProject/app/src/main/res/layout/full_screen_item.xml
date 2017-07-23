@@ -16,7 +16,7 @@
         android:id="@+id/gallery_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/gallery_image"
+        android:layout_alignParentTop="@id/gallery_image"
         android:layout_centerHorizontal="true"
         android:textSize="18sp" />
 
