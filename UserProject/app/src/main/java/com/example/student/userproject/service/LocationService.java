@@ -9,13 +9,14 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
-
+import android.util.Log;
 
 @SuppressWarnings("MissingPermission")
 public class LocationService extends Service {
 
     private LocationManager mLocationManager;
     private LocationListener mLocationListener;
+    private Location mLocation;
 
     @Nullable
     @Override
@@ -25,12 +26,17 @@ public class LocationService extends Service {
 
     @Override
     public void onCreate() {
+        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        mLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
         mLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 Intent intent = new Intent("LOCATION_UPDATE");
                 intent.putExtra("lat", location.getLatitude());
                 intent.putExtra("lng", location.getLongitude());
+                intent.putExtra("mLocation", location);
+                Log.i("ssssssssssssss", mLocation + "    " + "changed");
                 sendBroadcast(intent);
             }
 
@@ -40,6 +46,7 @@ public class LocationService extends Service {
 
             @Override
             public void onProviderEnabled(String provider) {
+
             }
 
             @Override
@@ -49,9 +56,8 @@ public class LocationService extends Service {
                 startActivity(intent);
             }
         };
-
-        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, mLocationListener);
+        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 0, mLocationListener);
         // TODO check is it necessary and request network provider when gps is not available
 //        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, mLocationListener);
     }

@@ -1,5 +1,6 @@
 package com.example.student.userproject.fragment;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +25,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.student.userproject.R;
-import com.example.student.userproject.activity.HomeActivity;
 import com.example.student.userproject.model.PhotographInfo;
 import com.example.student.userproject.service.LocationService;
 import com.example.student.userproject.utility.Constants;
@@ -60,19 +61,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private BroadcastReceiver mBroadcastReceiver;
     private Intent serviceIntent;
     private SupportMapFragment fragmentMap;
-    private Location location;
     private Location mLocation;
-    private LatLng currentPosition;
+    private Location location;
     private double currentLat;
     private double currentLng;
     private Marker currentMarker;
     private Bitmap bmp;
     private Marker marker;
     private boolean isFirstLocationDetection = true;
-    private boolean ok = false;
-    private SharedPreferences okey;
+    private boolean orderOk = false;
+    private SharedPreferences orderOkey;
     private SharedPreferences shared;
     private String uid;
+    private Dialog dialog;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -95,9 +96,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         FirebaseDatabase dtabase = FirebaseDatabase.getInstance();
         mDatabaseRef = dtabase.getReference().child(Constants.PHOTOGRAPHS);
         photograpsList = new ArrayList<>();
-
-        okey = getActivity().getSharedPreferences("OK", Context.MODE_PRIVATE);
-        ok = okey.getBoolean("OK", false);
+        orderOkey = getActivity().getSharedPreferences("NOTIFICATION_OK", Context.MODE_PRIVATE);
+        orderOk = orderOkey.getBoolean("OK", false);
         return rootView;
     }
 
@@ -111,12 +111,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        listenLocationChanges();
-        if (ok) {
-            getPhotographer();
-        } else {
-            getAllPhotographsNearly();
+        if (mLocation == null) {
+            dialog = new Dialog(getActivity()); // Context, this, etc.
+            dialog.setTitle("Search location...");
+            dialog.show();
         }
+        listenLocationChanges();
     }
 
     @Override
@@ -129,9 +129,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onDestroy() {
-        if (shared != null && okey != null) {
+        if (shared != null && orderOkey != null) {
             shared.edit().remove(uid).apply();
-            okey.edit().putBoolean("OK", false).apply();
+            orderOkey.edit().putBoolean("OK", false).apply();
         }
         super.onDestroy();
         if (mBroadcastReceiver != null) {
@@ -164,6 +164,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mapRipple.withRippleDuration(MAP_RADAR_ANIMATION_DURATION);
         mapRipple.withTransparency(0.5f);
         mapRipple.startRippleMapAnimation();
+        Log.i("sssssssss", "aaaaaaaaaaaaaaaaaa");
     }
 
     private void startDetailFragment(Marker marker) {
@@ -187,25 +188,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 public void onReceive(Context context, Intent intent) {
                     currentLat = (double) intent.getExtras().get("lat");
                     currentLng = (double) intent.getExtras().get("lng");
-                    if (mMap != null) {
-                        if (currentMarker != null) {
-                            currentMarker.remove();
-                        }
-                        currentPosition = new LatLng(currentLat, currentLng);
-                        currentMarker = mMap.addMarker(
-                                new MarkerOptions().position(currentPosition));
-                        if (isFirstLocationDetection) {
-                            mMap.moveCamera(CameraUpdateFactory.newLatLng(currentPosition));
-                            mMap.animateCamera(CameraUpdateFactory.zoomTo(ZOOM_NUMBER),
-                                    MAP_ANIMATION_DURATION, null);
-                            isFirstLocationDetection = false;
-                        }
-                        if (mapRipple == null) {
-                            initMapRadar(currentPosition);
-                        } else if (!mapRipple.isAnimationRunning()) {
-                            mapRipple.startRippleMapAnimation();
-                        }
-                        mapRipple.withLatLng(currentPosition);
+                    mLocation = (Location) intent.getExtras().get("mLocation");
+                    dialog.dismiss();
+                    if (orderOk) {
+                        getPhotographer();
+                    } else {
+                        getAllPhotographsNearly();
                     }
                 }
             };
@@ -213,15 +201,40 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         getActivity().registerReceiver(mBroadcastReceiver, new IntentFilter("LOCATION_UPDATE"));
     }
 
+    private void addCurrentMarker(double latitude, double longitude) {
+        if (mMap != null) {
+            if (currentMarker != null) {
+                currentMarker.remove();
+            }
+            LatLng currentPosition = new LatLng(latitude, longitude);
+            currentMarker = mMap.addMarker(
+                    new MarkerOptions().position(currentPosition));
+            if (isFirstLocationDetection) {
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(currentPosition));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(ZOOM_NUMBER),
+                        MAP_ANIMATION_DURATION, null);
+                isFirstLocationDetection = false;
+            }
+            if (mapRipple == null) {
+                initMapRadar(currentPosition);
+            } else if (!mapRipple.isAnimationRunning()) {
+                mapRipple.startRippleMapAnimation();
+            }
+            mapRipple.withLatLng(currentPosition);
+        }
+    }
+
     private void getAllPhotographsNearly() {
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                mMap.clear();
+                if (mMap != null) {
+                    mMap.clear();
+                }
                 for (DataSnapshot postSnepshot : dataSnapshot.getChildren()) {
                     final PhotographInfo info = postSnepshot.getValue(PhotographInfo.class);
                     final LatLng latLng = getLatLng(info);
-                    if (location.distanceTo(mLocation) >= DISTANCE) {
+                    if (location.distanceTo(mLocation) <= DISTANCE) {
                         marker = mMap.addMarker(
                                 new MarkerOptions().position(latLng).title(info.getName()));
                         marker.setTag(info);
@@ -236,6 +249,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     }
                     photograpsList.add(info);
                 }
+                addCurrentMarker(mLocation.getLatitude(), mLocation.getLongitude());
             }
 
             @Override
@@ -250,13 +264,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mDatabaseRef.child(uid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                mMap.clear();
+                if (mMap != null) mMap.clear();
                 PhotographInfo info = dataSnapshot.getValue(PhotographInfo.class);
                 LatLng latLng = getLatLng(info);
                 marker = mMap.addMarker(new MarkerOptions().position(latLng).title(info.getName()));
                 marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+
+                if (location.distanceTo(mLocation) <= 50) {
+                    orderOkey.edit().putBoolean("OK", false).apply();
+                    getAllPhotographsNearly();
+                }
+                addCurrentMarker(mLocation.getLatitude(), mLocation.getLongitude());
             }
 
             @Override
@@ -271,11 +291,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         double latitude = info.getLatitude();
         double longitude = info.getLongitude();
         final LatLng latLng = new LatLng(latitude, longitude);
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
         mLocation = new Location("provider");
         mLocation.setLatitude(currentLat);
         mLocation.setLongitude(currentLng);
-        location.setLatitude(latitude);
-        location.setLongitude(longitude);
         return latLng;
     }
 
@@ -284,21 +304,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void run() {
                 getActivity().runOnUiThread(new Runnable() {
-
                     @Override
                     public void run() {
-                        Glide.with(getActivity())
-                                .load(info.getAvatarUri())
-                                .asBitmap()
-                                .fitCenter()
-                                .into(new SimpleTarget<Bitmap>() {
-                                    @Override
-                                    public void onResourceReady(Bitmap resource,
-                                                                GlideAnimation<? super Bitmap> glideAnimation) {
-                                        bmp = Bitmap.createScaledBitmap(resource, 80, 80, false);
-                                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(bmp));
-                                    }
-                                });
+                        if (marker != null) {
+                            Glide.with(getActivity())
+                                    .load(info.getAvatarUri())
+                                    .asBitmap()
+                                    .fitCenter()
+                                    .into(new SimpleTarget<Bitmap>() {
+                                        @Override
+                                        public void onResourceReady(Bitmap resource,
+                                                                    GlideAnimation<? super Bitmap> glideAnimation) {
+                                            bmp = Bitmap.createScaledBitmap(resource, 80, 80, false);
+                                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(bmp));
+                                        }
+                                    });
+                        }
                     }
                 });
             }

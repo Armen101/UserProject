@@ -44,8 +44,6 @@ import java.util.List;
 
 public class PhotographDetailInfoFragment extends Fragment implements View.OnClickListener {
 
-
-
     private ImageView detailAvatar;
     private Button sendNotification;
     private TextView detailName;

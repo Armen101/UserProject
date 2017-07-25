@@ -19,7 +19,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        SharedPreferences shared = getSharedPreferences("OK", MODE_PRIVATE);
+        SharedPreferences shared = getSharedPreferences("NOTIFICATION_OK", MODE_PRIVATE);
         SharedPreferences.Editor edit = shared.edit();
         if (remoteMessage.getData().get("title").equals("OK")) {
             edit.putBoolean("OK", true);
