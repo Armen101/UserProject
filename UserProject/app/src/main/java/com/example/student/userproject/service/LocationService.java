@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 @SuppressWarnings("MissingPermission")
 public class LocationService extends Service {
@@ -36,7 +35,6 @@ public class LocationService extends Service {
                 intent.putExtra("lat", location.getLatitude());
                 intent.putExtra("lng", location.getLongitude());
                 intent.putExtra("mLocation", location);
-                Log.i("ssssssssssssss", mLocation + "    " + "changed");
                 sendBroadcast(intent);
             }
 

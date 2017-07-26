@@ -1,6 +1,5 @@
 package com.example.student.userproject.fragment;
 
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -33,8 +32,8 @@ import static com.google.android.gms.internal.zzt.TAG;
 
 public class PostFragment extends Fragment {
 
-    private DatabaseReference mDatabaseRef;private boolean isFirstClicked = true;
-
+    private DatabaseReference mDatabaseRef;
+    private boolean isFirstClicked = true;
 
     public PostFragment() {
 
@@ -57,6 +56,8 @@ public class PostFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_post, container, false);
         RecyclerView postRecyclerView = (RecyclerView) rootView.findViewById(R.id.post_recycler_view);
         LinearLayoutManager lm = new LinearLayoutManager(getActivity());
+        lm.setReverseLayout(true);
+        lm.setStackFromEnd(true);
         postRecyclerView.setLayoutManager(lm);
         postRecyclerView.setHasFixedSize(true);
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
@@ -67,37 +68,35 @@ public class PostFragment extends Fragment {
     @NonNull
     private FirebaseRecyclerAdapter<PostModel, PostHolder> getFirebaseRecyclerAdapter() {
         return new FirebaseRecyclerAdapter<PostModel, PostHolder>(
-                    PostModel.class,
-                    R.layout.post_recycler_row_item,
-                    PostHolder.class,
-                    mDatabaseRef.child(Constants.POSTS)) {
-                @Override
-                protected void populateViewHolder(final PostHolder viewHolder, final PostModel model, int position) {
-                    viewHolder.tvUserName.setText(model.getUserName());
-                    long date = model.getDate();
-                    viewHolder.tvPostTime.setText(getCurrentDate(date, "dd/MM/yyyy hh:mm"));
-                    viewHolder.tvPostTitle.setText(model.getTitle());
-                    viewHolder.tvLikesCount.setText(String.valueOf(model.getLikes()));
-                    viewHolder.imgLike.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (isFirstClicked) {
-                                isFirstClicked = false;
-                                updateNumLikes(model.getUid());
-                                updateUserRating(model.getUserId());
-                                Toast.makeText(getActivity(), "liked", Toast.LENGTH_SHORT).show();
-                            } else {
-                                viewHolder.imgLike.setEnabled(false);
-                            }
+                PostModel.class,
+                R.layout.post_recycler_row_item,
+                PostHolder.class,
+                mDatabaseRef.child(Constants.POSTS)) {
+            @Override
+            protected void populateViewHolder(final PostHolder viewHolder, final PostModel model, int position) {
+                viewHolder.tvUserName.setText(model.getUserName());
+                long date = model.getDate();
+                viewHolder.tvPostTime.setText(getCurrentDate(date, "dd/MM/yyyy hh:mm"));
+                viewHolder.tvPostTitle.setText(model.getTitle());
+                viewHolder.tvLikesCount.setText(String.valueOf(model.getLikes()));
+                viewHolder.imgLike.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (isFirstClicked) {
+                            isFirstClicked = false;
+                            updateNumLikes(model.getUid());
+                            updateUserRating(model.getUserId());
+                            Toast.makeText(getActivity(), "liked", Toast.LENGTH_SHORT).show();
+                        } else {
+                            viewHolder.imgLike.setEnabled(false);
                         }
-                    });
-
-                    Glide.with(getActivity())
-                            .load(model.getImageUrl())
-                            .into(viewHolder.imgPost);
-
-                }
-            };
+                    }
+                });
+                Glide.with(getActivity())
+                        .load(model.getImageUrl())
+                        .into(viewHolder.imgPost);
+            }
+        };
     }
 
     private void updateUserRating(String userId) {
@@ -113,7 +112,6 @@ public class PostFragment extends Fragment {
                     }
                 });
     }
-
 
     public static String getCurrentDate(long milliSeconds, String dateFormat) {
         // Create a DateFormatter object for displaying date in specified format.
@@ -157,7 +155,6 @@ public class PostFragment extends Fragment {
 
         public PostHolder(View itemView) {
             super(itemView);
-
             tvUserName = (TextView) itemView.findViewById(R.id.tv_post_username);
             tvPostTitle = (TextView) itemView.findViewById(R.id.tv_post_title);
             tvPostTime = (TextView) itemView.findViewById(R.id.tv_post_time);
@@ -166,5 +163,4 @@ public class PostFragment extends Fragment {
             imgLike = (ImageView) itemView.findViewById(R.id.img_like);
         }
     }
-
 }
