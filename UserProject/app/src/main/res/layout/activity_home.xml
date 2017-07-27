@@ -18,7 +18,7 @@
         android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorBottomBackground"
+        android:background="@color/colorDarkGreen"
         android:layout_height="wrap_content"
         app:itemIconTint="@color/colorRed"
         app:itemTextColor="@color/colorWhite"

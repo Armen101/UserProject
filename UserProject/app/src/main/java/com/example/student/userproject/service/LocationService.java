@@ -40,6 +40,7 @@ public class LocationService extends Service {
 
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
+
             }
 
             @Override
@@ -54,8 +55,8 @@ public class LocationService extends Service {
                 startActivity(intent);
             }
         };
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, mLocationListener);
-        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 0, mLocationListener);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 120000, 0, mLocationListener);
+        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 120000, 0, mLocationListener);
         // TODO check is it necessary and request network provider when gps is not available
 //        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, mLocationListener);
     }

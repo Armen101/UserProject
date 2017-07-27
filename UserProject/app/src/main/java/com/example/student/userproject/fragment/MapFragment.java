@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
@@ -48,10 +49,10 @@ import java.util.List;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
-    private static final long MAP_RADAR_ANIMATION_DURATION = 12000;
     private static final float ZOOM_NUMBER = 13;
     private static final int MAP_ANIMATION_DURATION = 2000;
     private static final float DISTANCE = 5000;
+    private static final long MAP_RADAR_ANIMATION_DURATION = 12000;
 
     private DatabaseReference mDatabaseRef;
     private List<PhotographInfo> photograpsList;
@@ -86,6 +87,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         serviceIntent = new Intent(getActivity(), LocationService.class);
         getActivity().startService(serviceIntent);
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_BEHIND);
     }
 
     @Override
@@ -136,7 +138,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (mBroadcastReceiver != null) {
             getActivity().unregisterReceiver(mBroadcastReceiver);
         }
-        mMap.clear();
+        if (mMap != null) mMap.clear();
         getActivity().stopService(serviceIntent);
     }
 
@@ -232,7 +234,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 for (DataSnapshot postSnepshot : dataSnapshot.getChildren()) {
                     final PhotographInfo info = postSnepshot.getValue(PhotographInfo.class);
                     final LatLng latLng = getLatLng(info);
-                    if (location.distanceTo(mLocation) <= DISTANCE) {
+                    if (location.distanceTo(mLocation) >= DISTANCE) {
                         marker = mMap.addMarker(
                                 new MarkerOptions().position(latLng).title(info.getName()));
                         marker.setTag(info);
