@@ -1,7 +1,9 @@
 package com.example.student.userproject.service;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -13,9 +15,11 @@ import android.support.annotation.Nullable;
 @SuppressWarnings("MissingPermission")
 public class LocationService extends Service {
 
-    private LocationManager mLocationManager;
-    private LocationListener mLocationListener;
+    private static LocationManager mLocationManager;
+    private static LocationListener mLocationListener;
     private Location mLocation;
+    private static boolean bNetwork;
+    private static SharedPreferences shared;
 
     @Nullable
     @Override
@@ -27,10 +31,13 @@ public class LocationService extends Service {
     public void onCreate() {
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         mLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        shared = getSharedPreferences("SWITCH", Context.MODE_PRIVATE);
+
 
         mLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+                changeNetwork();
                 Intent intent = new Intent("LOCATION_UPDATE");
                 intent.putExtra("lat", location.getLatitude());
                 intent.putExtra("lng", location.getLongitude());
@@ -50,15 +57,15 @@ public class LocationService extends Service {
 
             @Override
             public void onProviderDisabled(String provider) {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                if (provider.equals(LocationManager.GPS_PROVIDER)) {
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+
             }
         };
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 120000, 0, mLocationListener);
-        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 120000, 0, mLocationListener);
-        // TODO check is it necessary and request network provider when gps is not available
-//        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, mLocationListener);
     }
 
     @Override
@@ -66,6 +73,13 @@ public class LocationService extends Service {
         super.onDestroy();
         if (mLocationManager != null) {
             mLocationManager.removeUpdates(mLocationListener);
+        }
+    }
+
+    public static void changeNetwork() {
+        bNetwork = shared.getBoolean("SWITCH_TRUE", false);
+        if (bNetwork) {
+            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 120000, 0, mLocationListener);
         }
     }
 }

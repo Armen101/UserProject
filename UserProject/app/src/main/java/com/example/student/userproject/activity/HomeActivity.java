@@ -1,6 +1,7 @@
 package com.example.student.userproject.activity;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,8 +10,15 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.student.userproject.R;
@@ -18,23 +26,34 @@ import com.example.student.userproject.fragment.FavoriteFragment;
 import com.example.student.userproject.fragment.MapFragment;
 import com.example.student.userproject.fragment.PhotographDetailInfoFragment;
 import com.example.student.userproject.fragment.PostFragment;
+import com.example.student.userproject.service.LocationService;
 import com.example.student.userproject.utility.FavoritAdapterHelper;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
+import static com.example.student.userproject.utility.Constants.TAG_FAVORITE;
+import static com.example.student.userproject.utility.Constants.TAG_MAP;
+import static com.example.student.userproject.utility.Constants.TAG_POSTS;
+
 public class HomeActivity extends AppCompatActivity {
 
-    public static final String TAG_MAP = "MAP_FRAGMENT";
-    public static final String TAG_POSTS = "POSTS_FRAGMENT";
-    public static final String TAG_FAVORITE = "FAVORITE_FRAGMENT";
-
     private String tag = TAG_MAP;
+    private PopupWindow popupWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        ImageView btn = (ImageView) findViewById(R.id.img_settings);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopup(v);
+            }
+        });
+
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("choco_cooky.ttf")
                 .build());
@@ -121,7 +140,6 @@ public class HomeActivity extends AppCompatActivity {
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
             case 10: {
-                // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED
                         && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
@@ -148,5 +166,42 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    public void showPopup(final View v) {
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View popupView = layoutInflater.inflate(R.layout.popup_menu, null);
+
+        SharedPreferences shared = getSharedPreferences("SWITCH", Context.MODE_PRIVATE);
+        final SharedPreferences.Editor edit = shared.edit();
+
+        final boolean swBoolean = shared.getBoolean("SWITCH_TRUE", false);
+
+        final Switch sw = (Switch) popupView.findViewById(R.id.mySwitch);
+        sw.setChecked(swBoolean);
+        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                isChecked = swBoolean;
+                if (isChecked) {
+                    popupWindow.dismiss();
+                    edit.putBoolean("SWITCH_TRUE", false);
+                    edit.apply();
+                } else {
+                    popupWindow.dismiss();
+                    LocationService.changeNetwork();
+                    edit.putBoolean("SWITCH_TRUE", true);
+                    edit.apply();
+                }
+            }
+        });
+
+        popupWindow = new PopupWindow(
+                popupView,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.dismiss();
+        popupWindow.showAsDropDown(v);
     }
 }

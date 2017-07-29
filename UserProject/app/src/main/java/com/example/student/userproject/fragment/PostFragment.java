@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.example.student.userproject.R;
 import com.example.student.userproject.model.PostModel;
 import com.example.student.userproject.utility.Constants;
+import com.example.student.userproject.utility.SQLHelper;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,7 +34,7 @@ import static com.google.android.gms.internal.zzt.TAG;
 public class PostFragment extends Fragment {
 
     private DatabaseReference mDatabaseRef;
-    private boolean isFirstClicked = true;
+    private SQLHelper db;
 
     public PostFragment() {
 
@@ -47,6 +48,7 @@ public class PostFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        db = new SQLHelper(getActivity());
 
     }
 
@@ -79,16 +81,22 @@ public class PostFragment extends Fragment {
                 viewHolder.tvPostTime.setText(getCurrentDate(date, "dd/MM/yyyy HH:mm"));
                 viewHolder.tvPostTitle.setText(model.getTitle());
                 viewHolder.tvLikesCount.setText(String.valueOf(model.getLikes()));
+                final String uid = model.getUid();
+                if (db.isLiked(uid)) {
+                    viewHolder.imgLike.setImageResource(R.drawable.ic_thumb_up_blue_dark_24dp);
+                }
                 viewHolder.imgLike.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (isFirstClicked) {
-                            isFirstClicked = false;
+
+                        if (db.isLiked(uid)) {
+                            Toast.makeText(getActivity(), "has already liked", Toast.LENGTH_SHORT).show();
+                        } else {
+                            db.addPostLikes(uid);
                             updateNumLikes(model.getUid());
                             updateUserRating(model.getUserId());
                             Toast.makeText(getActivity(), "liked", Toast.LENGTH_SHORT).show();
-                        } else {
-                            viewHolder.imgLike.setEnabled(false);
+                            viewHolder.imgLike.setImageResource(R.drawable.ic_thumb_up_blue_dark_24dp);
                         }
                     }
                 });
