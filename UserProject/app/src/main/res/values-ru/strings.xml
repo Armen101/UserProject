@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <string name="app_name">UserProject</string>
+        <string name="title_activity_home">HomeActivity</string>
+        <string name="title_home">Home</string>
+        <string name="title_dashboard">Dashboard</string>
+        <string name="title_notifications">Notifications</string>
+        <string name="title_activity_maps">Map</string>
+
+        <!-- TODO: Remove or change this placeholder text -->
+        <string name="hello_blank_fragment">Hello blank fragment</string>
+        <string name="name">name</string>
+        <string name="address">address</string>
+        <string name="to_order">to order</string>
+        <string name="camera_info">camera info</string>
+        <string name="phone">phone</string>
+        <string name="email">email</string>
+        <string name="number">number</string>
+        <string name="send">Send</string>
+        <string name="language">Language</string>
+        <string name="about">About</string>
+        <string name="traffic">Traffic</string>
+        <string name="my_photo">my photo</string>
+        <string name="my_name">name</string>
+        <string name="data">data</string>
+        <string name="likes">likes</string>
+        <string name="map">катра</string>
+        <string name="post">пост</string>
+        <string name="favorite">избранное</string>
+        <string name="my_language">язык</string>
+        <string name="switch_my">переключать</string>
+        <string name="my_about">о нас</string>
+        <string name="my_phone">телефон</string>
+
+</resources>

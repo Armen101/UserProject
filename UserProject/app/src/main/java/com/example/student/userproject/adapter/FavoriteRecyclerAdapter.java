@@ -58,7 +58,7 @@ public class FavoriteRecyclerAdapter extends RecyclerView.Adapter<FavoriteRecycl
     public void onBindViewHolder(MyViewHolder holder, final int position) {
 
         holder.tvName.setText(list.get(position).getName());
-        holder.tvPhone.setText(list.get(position).getPhone());
+        holder.tvPhone.setText(list.get(position).getEmail());
 
         Glide.with(context)
                 .load(list.get(position).getAvatarUri())
