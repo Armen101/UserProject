@@ -65,7 +65,7 @@ public class LocationService extends Service {
 
             }
         };
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 120000, 0, mLocationListener);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mLocationListener);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class LocationService extends Service {
     public static void changeNetwork() {
         bNetwork = shared.getBoolean("SWITCH_TRUE", false);
         if (bNetwork) {
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 120000, 0, mLocationListener);
+            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
         }
     }
 }

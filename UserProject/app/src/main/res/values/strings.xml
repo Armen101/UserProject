@@ -14,4 +14,6 @@
     <string name="camera_info">camera info</string>
     <string name="phone">phone</string>
     <string name="email">email</string>
+    <string name="cheng_map">Change map radius</string>
+    <string name="btn_update_radius">ok</string>
 </resources>
