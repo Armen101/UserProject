@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,9 +20,11 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.student.userproject.R;
+import com.example.student.userproject.fragment.AboutFragment;
 import com.example.student.userproject.fragment.FavoriteFragment;
 import com.example.student.userproject.fragment.MapFragment;
 import com.example.student.userproject.fragment.PhotographDetailInfoFragment;
@@ -40,6 +43,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private String tag = TAG_MAP;
     private PopupWindow popupWindow;
+    private TextView tvAbout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,6 +175,15 @@ public class HomeActivity extends AppCompatActivity {
     public void showPopup(final View v) {
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View popupView = layoutInflater.inflate(R.layout.popup_menu, null);
+        tvAbout = (TextView)popupView.findViewById(R.id.tv_about);
+        tvAbout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getSupportFragmentManager();
+                manager.beginTransaction().replace(R.id.container,AboutFragment.newInstance())
+                        .addToBackStack(null).commit();
+            }
+        });
 
         SharedPreferences shared = getSharedPreferences("SWITCH", Context.MODE_PRIVATE);
         final SharedPreferences.Editor edit = shared.edit();
