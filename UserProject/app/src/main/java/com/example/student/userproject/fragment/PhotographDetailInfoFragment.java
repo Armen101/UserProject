@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.student.userproject.R;
@@ -49,7 +50,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
     private TextView detailName;
     private TextView detailAddress;
     private TextView detailCameraInfo;
-    private TextView detailPhone;
+    private TextView detailEmail;
     private List<PhotographInfo> detailList;
     private boolean isFavorite;
     private PhotographInfo userInfo;
@@ -59,7 +60,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
     private EditText etPhone;
     private Dialog alertDialog;
     private ViewPager viewpagerCar;
-    private ImageView imageViewPhone;
+    private ImageView imageViewEmail;
     private RatingBar ratingBar;
 
     public PhotographDetailInfoFragment() {
@@ -106,7 +107,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
         getFavoriteStatus();
         sendNotification.setOnClickListener(this);
         imgFavorite.setOnClickListener(this);
-        imageViewPhone.setOnClickListener(this);
+        imageViewEmail.setOnClickListener(this);
 
         return rootView;
     }
@@ -151,7 +152,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
         detailList = new ArrayList<>();
         detailName.setText(photographInfo.getName());
         detailCameraInfo.setText(photographInfo.getCamera_info());
-        detailPhone.setText(photographInfo.getPhone());
+        detailEmail.setText(photographInfo.getEmail());
         detailAddress.setText(photographInfo.getAddress());
         uid = photographInfo.getUid();
         ratingBar.setProgress(photographInfo.getRating());
@@ -166,9 +167,9 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
         detailName = (TextView) rootView.findViewById(R.id.tv_detail_name);
         detailAddress = (TextView) rootView.findViewById(R.id.tv_detail_address);
         detailCameraInfo = (TextView) rootView.findViewById(R.id.tv_detail_camera_info);
-        detailPhone = (TextView) rootView.findViewById(R.id.tv_detail_phone);
+        detailEmail = (TextView) rootView.findViewById(R.id.tv_detail_email);
         imgFavorite = (ImageView) rootView.findViewById(R.id.btn_favorite);
-        imageViewPhone = (ImageView) rootView.findViewById(R.id.phone_img);
+        imageViewEmail = (ImageView) rootView.findViewById(R.id.email_img);
         ratingBar = (RatingBar) rootView.findViewById(R.id.rating_bar);
     }
 
@@ -244,17 +245,23 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
                 }
                 break;
             }
-            case R.id.phone_img: {
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:" + detailPhone.getText()));
-
-                if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.CALL_PHONE}, 1);
-                    return;
-                }
-                startActivity(callIntent);
+            case R.id.email_img: {
+                sendEmail();
                 break;
             }
+        }
+    }
+
+    private void sendEmail() {
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("message/rfc822");
+        i.putExtra(Intent.EXTRA_EMAIL, new String[]{detailEmail.getText().toString()});
+        i.putExtra(Intent.EXTRA_SUBJECT, "subject of email");
+        i.putExtra(Intent.EXTRA_TEXT, "body of email");
+        try {
+            startActivity(Intent.createChooser(i, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(getActivity(), "There are no email clients installed.", Toast.LENGTH_SHORT).show();
         }
     }
 }

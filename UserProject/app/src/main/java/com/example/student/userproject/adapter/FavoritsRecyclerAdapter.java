@@ -58,7 +58,7 @@ public class FavoritsRecyclerAdapter extends RecyclerView.Adapter<FavoritsRecycl
     public void onBindViewHolder(MyViewHolder holder, final int position) {
 
         holder.tvName.setText(list.get(position).getName());
-        holder.tvPhone.setText(list.get(position).getPhone());
+        holder.tvEmail.setText(list.get(position).getEmail());
 
         Glide.with(context)
                 .load(list.get(position).getAvatarUri())
@@ -78,7 +78,7 @@ public class FavoritsRecyclerAdapter extends RecyclerView.Adapter<FavoritsRecycl
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
-        private final TextView tvPhone;
+        private final TextView tvEmail;
         private final ImageView imgAvatar;
 
         private TextView tvName;
@@ -86,7 +86,7 @@ public class FavoritsRecyclerAdapter extends RecyclerView.Adapter<FavoritsRecycl
         MyViewHolder(View view) {
             super(view);
             tvName = (TextView) view.findViewById(R.id.person_name);
-            tvPhone = (TextView) view.findViewById(R.id.person_phone);
+            tvEmail = (TextView) view.findViewById(R.id.person_phone);
             imgAvatar = (ImageView) view.findViewById(R.id.person_photo);
         }
     }

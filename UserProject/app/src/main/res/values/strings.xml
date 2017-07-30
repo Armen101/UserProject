@@ -13,4 +13,5 @@
     <string name="to_order">to order</string>
     <string name="camera_info">camera info</string>
     <string name="phone">phone</string>
+    <string name="email">email</string>
 </resources>

@@ -233,7 +233,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 for (DataSnapshot postSnepshot : dataSnapshot.getChildren()) {
                     final PhotographInfo info = postSnepshot.getValue(PhotographInfo.class);
                     final LatLng latLng = getLatLng(info);
-                    if (location.distanceTo(mLocation) <= DISTANCE) {
+                    if (location.distanceTo(mLocation) >= DISTANCE) {
                         marker = mMap.addMarker(
                                 new MarkerOptions().position(latLng).title(info.getName()));
                         marker.setTag(info);
