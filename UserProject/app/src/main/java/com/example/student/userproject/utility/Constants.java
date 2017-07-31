@@ -11,4 +11,6 @@ public class Constants {
     public static final String TAG_MAP = "MAP_FRAGMENT";
     public static final String TAG_POSTS = "POSTS_FRAGMENT";
     public static final String TAG_FAVORITE = "FAVORITE_FRAGMENT";
+    public static final String DEFAULT_LANGUAGE = "defaultLanguage";
+
 }

@@ -35,5 +35,10 @@
     <string name="owner">Owner</string>
     <string name="members">Members</string>
     <string name="_2017_vtc_android_team">\@2017 VTC Android Team</string>
+    <string name="english">english</string>
+    <string name="armenain">armenain</string>
+    <string name="german">german</string>
+    <string name="spanish">spanish</string>
+    <string name="russian">russian</string>
 
 </resources>
