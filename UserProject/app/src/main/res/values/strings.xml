@@ -7,7 +7,6 @@
     <string name="title_activity_maps">Map</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="name">name</string>
     <string name="address">address</string>
     <string name="to_order">to order</string>
@@ -33,5 +32,8 @@
     <string name="my_about">About</string>
     <string name="my_phone">Phone</string>
     <string name="about_app">The application allows you to search for photographers, which are near your location, and order them.</string>
+    <string name="owner">Owner</string>
+    <string name="members">Members</string>
+    <string name="_2017_vtc_android_team">\@2017 VTC Android Team</string>
 
 </resources>
