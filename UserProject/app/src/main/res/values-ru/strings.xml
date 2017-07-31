@@ -9,22 +9,22 @@
 
         <!-- TODO: Remove or change this placeholder text -->
         <string name="hello_blank_fragment">Hello blank fragment</string>
-        <string name="name">name</string>
-        <string name="address">address</string>
-        <string name="to_order">to order</string>
-        <string name="camera_info">camera info</string>
+        <string name="name">имя</string>
+        <string name="address">адрес</string>
+        <string name="to_order">заказать</string>
+        <string name="camera_info">информация камеры</string>
         <string name="phone">phone</string>
         <string name="email">email</string>
-        <string name="number">number</string>
-        <string name="send">Send</string>
-        <string name="language">Language</string>
+        <string name="number">номер</string>
+        <string name="send">отправить</string>
+        <string name="language">язык</string>
         <string name="about">About</string>
         <string name="traffic">Traffic</string>
-        <string name="my_photo">my photo</string>
-        <string name="my_name">name</string>
+        <string name="my_photo">мое фото</string>
+        <string name="my_name">мое имя</string>
         <string name="data">data</string>
-        <string name="likes">likes</string>
-        <string name="map">катра</string>
+        <string name="likes">лайки</string>
+        <string name="map">карта</string>
         <string name="post">пост</string>
         <string name="favorite">избранное</string>
         <string name="my_language">язык</string>

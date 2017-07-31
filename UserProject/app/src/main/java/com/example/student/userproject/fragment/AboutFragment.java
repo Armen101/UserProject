@@ -1,11 +1,11 @@
 package com.example.student.userproject.fragment;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +28,7 @@ public class AboutFragment extends Fragment {
     private RecyclerView myRecycler;
     private List<AboutModel> aboutModelList;
     private TextView tvInfo;
+    private TextView tvAboutApp;
 
     public AboutFragment() {
     }
@@ -50,6 +51,22 @@ public class AboutFragment extends Fragment {
         tvOwnerName = (TextView) rootView.findViewById(R.id.tv_owner_name_surname);
         tvMembers = (TextView) rootView.findViewById(R.id.tv_members);
         tvInfo = (TextView) rootView.findViewById(R.id.vtc_and_team);
+        tvAboutApp = (TextView) rootView.findViewById(R.id.about_app);
+
+        tvInfo.setMovementMethod(LinkMovementMethod.getInstance());
+        String text = "<a href='http://vtc.am/am/'> @2017 VTC Android team   " +
+                "http://vtc.am </a>";
+        tvInfo.setText(Html.fromHtml(text));
+
+
+//        tvInfo.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent browser= new Intent(Intent.ACTION_VIEW, Uri.parse("http://vtc.am/am/"));
+//                startActivity(browser);
+//            }
+//        });
+
 
 
         aboutModelList = new ArrayList<>();

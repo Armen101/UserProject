@@ -51,15 +51,27 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/about_app"
+        android:text="@string/about_app"
+        android:layout_width="match_parent"
+        android:textSize="18sp"
+        android:layout_margin="20dp"
+        android:textColor="@color/colorBlack"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/owner_info"/>
+
+    <TextView
         android:id="@+id/tv_members"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/owner_info"
+        android:layout_below="@id/about_app"
         android:layout_margin="10dp"
-        android:gravity="right"
+        android:gravity="center"
         android:text="Members"
         android:textColor="@color/colorBlack"
         android:textSize="18sp" />
+
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_about"
@@ -78,11 +90,16 @@
 
         <TextView
             android:id="@+id/vtc_and_team"
+            android:autoLink="web"
+            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:linksClickable="true"
             android:text="\@2017 VTC Android Team"
             android:textColor="@color/colorBlack"
+            android:textColorLink="@color/colorBlack"
+            android:background="@color/colorGreyLight"
             android:textSize="18sp" />
 
     </RelativeLayout>
