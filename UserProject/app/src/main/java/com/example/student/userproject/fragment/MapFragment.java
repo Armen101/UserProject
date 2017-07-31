@@ -73,7 +73,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private SharedPreferences orderOkey;
     private SharedPreferences shared;
     private String uid;
-    private Dialog dialog;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -93,8 +92,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
-        FirebaseDatabase dtabase = FirebaseDatabase.getInstance();
-        mDatabaseRef = dtabase.getReference().child(Constants.PHOTOGRAPHS);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        mDatabaseRef = database.getReference().child(Constants.PHOTOGRAPHS);
         photograpsList = new ArrayList<>();
         orderOkey = getActivity().getSharedPreferences("NOTIFICATION_OK", Context.MODE_PRIVATE);
         orderOk = orderOkey.getBoolean("OK", false);
@@ -111,11 +110,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        if (mLocation == null) {
-            dialog = new Dialog(getActivity()); // Context, this, etc.
-            dialog.setTitle("Search location...");
-            dialog.show();
-        }
         listenLocationChanges();
     }
 
@@ -188,7 +182,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     currentLat = (double) intent.getExtras().get("lat");
                     currentLng = (double) intent.getExtras().get("lng");
                     mLocation = (Location) intent.getExtras().get("mLocation");
-                    dialog.dismiss();
                     if (orderOk) {
                         getPhotographer();
                     } else {

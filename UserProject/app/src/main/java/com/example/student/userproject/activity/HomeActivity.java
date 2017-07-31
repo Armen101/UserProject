@@ -10,6 +10,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.student.userproject.R;
@@ -26,6 +28,7 @@ import com.example.student.userproject.fragment.FavoriteFragment;
 import com.example.student.userproject.fragment.MapFragment;
 import com.example.student.userproject.fragment.PhotographDetailInfoFragment;
 import com.example.student.userproject.fragment.PostFragment;
+import com.example.student.userproject.fragment.RatingFragment;
 import com.example.student.userproject.service.LocationService;
 import com.example.student.userproject.utility.FavoritAdapterHelper;
 
@@ -36,7 +39,7 @@ import static com.example.student.userproject.utility.Constants.TAG_FAVORITE;
 import static com.example.student.userproject.utility.Constants.TAG_MAP;
 import static com.example.student.userproject.utility.Constants.TAG_POSTS;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String tag = TAG_MAP;
     private PopupWindow popupWindow;
@@ -172,12 +175,31 @@ public class HomeActivity extends AppCompatActivity {
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View popupView = layoutInflater.inflate(R.layout.popup_menu, null);
 
+        findViewPopup(popupView);
+
+        popupWindow = new PopupWindow(
+                popupView,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.dismiss();
+        popupWindow.showAsDropDown(v);
+    }
+
+    private void findViewPopup(View popupView) {
         SharedPreferences shared = getSharedPreferences("SWITCH", Context.MODE_PRIVATE);
         final SharedPreferences.Editor edit = shared.edit();
-
         final boolean swBoolean = shared.getBoolean("SWITCH_TRUE", false);
 
+        TextView tvLlanguage = (TextView) popupView.findViewById(R.id.tv_language);
+        TextView tvRating = (TextView) popupView.findViewById(R.id.tv_rating);
+        TextView tvAbout = (TextView) popupView.findViewById(R.id.tv_about);
         final Switch sw = (Switch) popupView.findViewById(R.id.mySwitch);
+
+        tvLlanguage.setOnClickListener(this);
+        tvRating.setOnClickListener(this);
+        tvAbout.setOnClickListener(this);
+
         sw.setChecked(swBoolean);
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -195,13 +217,23 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
+    }
 
-        popupWindow = new PopupWindow(
-                popupView,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupWindow.setOutsideTouchable(true);
-        popupWindow.dismiss();
-        popupWindow.showAsDropDown(v);
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.tv_language:{
+                Log.i("ssssssssssssss", "tv_language");
+                break;
+            }
+            case R.id.tv_rating:{
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, RatingFragment.newInstance()).commit();
+                break;
+            }
+            case R.id.tv_about:{
+                break;
+            }
+        }
     }
 }

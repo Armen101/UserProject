@@ -33,7 +33,6 @@ public class LocationService extends Service {
         mLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         shared = getSharedPreferences("SWITCH", Context.MODE_PRIVATE);
 
-
         mLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
@@ -62,7 +61,6 @@ public class LocationService extends Service {
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 }
-
             }
         };
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 120000, 0, mLocationListener);
