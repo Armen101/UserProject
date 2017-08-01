@@ -9,14 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.student.userproject.adapter.FavoritsRecyclerAdapter;
+import com.example.student.userproject.adapter.FavoriteRecyclerAdapter;
 import com.example.student.userproject.model.PhotographInfo;
 import com.example.student.userproject.R;
 import com.example.student.userproject.utility.FavoritAdapterHelper;
 
 import org.parceler.Parcels;
 
-public class FavoriteFragment extends Fragment implements FavoritsRecyclerAdapter.OnItemClickFavorite {
+public class FavoriteFragment extends Fragment implements FavoriteRecyclerAdapter.OnItemClickFavorite {
 
     public FavoriteFragment() {
 
@@ -41,7 +41,7 @@ public class FavoriteFragment extends Fragment implements FavoritsRecyclerAdapte
         LinearLayoutManager lm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(lm);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(new FavoritsRecyclerAdapter(FavoritAdapterHelper.getFavoritList(), this, getContext()));
+        recyclerView.setAdapter(new FavoriteRecyclerAdapter(FavoritAdapterHelper.getFavoritList(), this, getContext()));
 
         return rootView;
     }

@@ -94,19 +94,19 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/phone_img"
+                    android:id="@+id/email_img"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
-                    app:srcCompat="@drawable/ic_phone_black_24dp" />
+                    android:layout_weight="0.17"
+                    app:srcCompat="@drawable/ic_email_black_24dp" />
 
                 <TextView
-                    android:id="@+id/tv_detail_phone"
+                    android:id="@+id/tv_detail_email"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.8"
                     android:gravity="center"
-                    android:hint="@string/phone"
+                    android:hint="@string/email"
                     android:textColor="@color/colorWhite" />
 
             </LinearLayout>

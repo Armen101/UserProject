@@ -1,24 +1,27 @@
 package com.example.student.userproject.fragment;
 
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.arsy.maps_library.MapRipple;
 import com.bumptech.glide.Glide;
@@ -51,7 +54,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private static final float ZOOM_NUMBER = 13;
     private static final int MAP_ANIMATION_DURATION = 2000;
-    private static final float DISTANCE = 5000;
+    private static float DISTANCE = 5000;
     private static final long MAP_RADAR_ANIMATION_DURATION = 12000;
 
     private DatabaseReference mDatabaseRef;
@@ -73,6 +76,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private SharedPreferences orderOkey;
     private SharedPreferences shared;
     private String uid;
+    private EditText etText;
+    private Button btnOk;
+    private FloatingActionButton btnSettingsMap;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -94,6 +100,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         mDatabaseRef = database.getReference().child(Constants.PHOTOGRAPHS);
+        btnSettingsMap = (FloatingActionButton) rootView.findViewById(R.id.btn_settings);
+        btnSettingsMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateRadius();
+            }
+        });
+        FirebaseDatabase dtabase = FirebaseDatabase.getInstance();
+        mDatabaseRef = dtabase.getReference().child(Constants.PHOTOGRAPHS);
         photograpsList = new ArrayList<>();
         orderOkey = getActivity().getSharedPreferences("NOTIFICATION_OK", Context.MODE_PRIVATE);
         orderOk = orderOkey.getBoolean("OK", false);
@@ -158,6 +173,39 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mapRipple.withRippleDuration(MAP_RADAR_ANIMATION_DURATION);
         mapRipple.withTransparency(0.5f);
         mapRipple.startRippleMapAnimation();
+    }
+
+    private void updateRadius() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.update_radius, null);
+        builder.setView(view);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        etText = (EditText) view.findViewById(R.id.et_text_update_radius);
+        btnOk = (Button) view.findViewById(R.id.btn_update_radius);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (etText.length() >= 9) {
+                    Toast.makeText(getActivity(), "Too bigger number", Toast.LENGTH_SHORT).show();
+                }
+                if (etText == null) {
+                    Toast.makeText(getActivity(), "Please enter number", Toast.LENGTH_SHORT).show();
+                }
+                int distance = Integer.parseInt(etText.getText().toString());
+                if (distance < 5000) {
+                    Toast.makeText(getContext(), "Enter the number bigger then 5000", Toast.LENGTH_SHORT).show();
+                } else {
+                    DISTANCE = distance;
+                    //addCurrentMarker(currentLat, currentLng);
+                    getAllPhotographsNearly();
+                    dialog.dismiss();
+                }
+
+            }
+        });
+
     }
 
     private void startDetailFragment(Marker marker) {
@@ -226,7 +274,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 for (DataSnapshot postSnepshot : dataSnapshot.getChildren()) {
                     final PhotographInfo info = postSnepshot.getValue(PhotographInfo.class);
                     final LatLng latLng = getLatLng(info);
-                    if (location.distanceTo(mLocation) <= DISTANCE) {
+                    if (location.distanceTo(mLocation) >= DISTANCE) {
                         marker = mMap.addMarker(
                                 new MarkerOptions().position(latLng).title(info.getName()));
                         marker.setTag(info);
@@ -264,7 +312,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
 
-                if (location.distanceTo(mLocation) <= 50) {
+                if (location.distanceTo(mLocation) <= DISTANCE) {
                     orderOkey.edit().putBoolean("OK", false).apply();
                     getAllPhotographsNearly();
                 }

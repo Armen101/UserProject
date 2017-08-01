@@ -9,4 +9,9 @@
     <color name="colorBlack">#161414</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorDarkGreen">#008080</color>
+    <color name="colorGrey">#b2b7b7</color>
+    <color name="colorDarkGrey">#565959</color>
+    <color name="colorGreyLight">#858989</color>
+
+
 </resources>

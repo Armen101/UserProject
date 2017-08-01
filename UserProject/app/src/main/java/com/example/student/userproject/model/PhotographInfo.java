@@ -8,7 +8,7 @@ import org.parceler.Parcel;
 public class PhotographInfo {
 
     private String name;
-    private String phone;
+    private String email;
     private String address;
     private String camera_info;
     private String imageUri;
@@ -22,11 +22,11 @@ public class PhotographInfo {
     public PhotographInfo() {
     }
 
-    public PhotographInfo(String name, String phone, String address, String camera_info,
+    public PhotographInfo(String name, String email, String address, String camera_info,
                           String imageUri, String avatarUri, String title, String uid,
                           int rating, double latitude, double longitude) {
         this.name = name;
-        this.phone = phone;
+        this.email = email;
         this.address = address;
         this.camera_info = camera_info;
         this.imageUri = imageUri;
@@ -46,12 +46,12 @@ public class PhotographInfo {
         this.name = name;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public int getRating() {

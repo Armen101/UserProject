@@ -17,7 +17,7 @@ import com.example.student.userproject.model.PhotographInfo;
 import java.util.List;
 
 
-public class FavoritsRecyclerAdapter extends RecyclerView.Adapter<FavoritsRecyclerAdapter.MyViewHolder>{
+public class FavoriteRecyclerAdapter extends RecyclerView.Adapter<FavoriteRecyclerAdapter.MyViewHolder>{
 
     private List<PhotographInfo> list;
     private Fragment usageFragment;
@@ -40,7 +40,7 @@ public class FavoritsRecyclerAdapter extends RecyclerView.Adapter<FavoritsRecycl
         }
     }
 
-    public FavoritsRecyclerAdapter(List<PhotographInfo> list, Fragment usageFragment, Context context) {
+    public FavoriteRecyclerAdapter(List<PhotographInfo> list, Fragment usageFragment, Context context) {
         this.list = list;
         this.usageFragment = usageFragment;
         this.context = context;
@@ -58,7 +58,7 @@ public class FavoritsRecyclerAdapter extends RecyclerView.Adapter<FavoritsRecycl
     public void onBindViewHolder(MyViewHolder holder, final int position) {
 
         holder.tvName.setText(list.get(position).getName());
-        holder.tvEmail.setText(list.get(position).getEmail());
+        holder.tvPhone.setText(list.get(position).getEmail());
 
         Glide.with(context)
                 .load(list.get(position).getAvatarUri())
@@ -78,7 +78,7 @@ public class FavoritsRecyclerAdapter extends RecyclerView.Adapter<FavoritsRecycl
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
-        private final TextView tvEmail;
+        private final TextView tvPhone;
         private final ImageView imgAvatar;
 
         private TextView tvName;
@@ -86,7 +86,7 @@ public class FavoritsRecyclerAdapter extends RecyclerView.Adapter<FavoritsRecycl
         MyViewHolder(View view) {
             super(view);
             tvName = (TextView) view.findViewById(R.id.person_name);
-            tvEmail = (TextView) view.findViewById(R.id.person_phone);
+            tvPhone = (TextView) view.findViewById(R.id.person_phone);
             imgAvatar = (ImageView) view.findViewById(R.id.person_photo);
         }
     }

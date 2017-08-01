@@ -1,14 +1,18 @@
 package com.example.student.userproject.activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,21 +20,28 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.student.userproject.R;
+import com.example.student.userproject.fragment.AboutFragment;
 import com.example.student.userproject.fragment.FavoriteFragment;
 import com.example.student.userproject.fragment.MapFragment;
 import com.example.student.userproject.fragment.PhotographDetailInfoFragment;
 import com.example.student.userproject.fragment.PostFragment;
 import com.example.student.userproject.fragment.RatingFragment;
 import com.example.student.userproject.service.LocationService;
+import com.example.student.userproject.utility.Constants;
 import com.example.student.userproject.utility.FavoritAdapterHelper;
+
+import java.util.Locale;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -43,6 +54,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private String tag = TAG_MAP;
     private PopupWindow popupWindow;
+    private TextView tvAbout;
+    private TextView btnLanguage;
+    private AlertDialog dialog;
+    private SharedPreferences shared;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +65,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_home);
 
         ImageView btn = (ImageView) findViewById(R.id.img_settings);
+
+        shared = getSharedPreferences("localization", MODE_PRIVATE);
+
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,6 +205,22 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void findViewPopup(View popupView) {
+        tvAbout = (TextView) popupView.findViewById(R.id.tv_about);
+        btnLanguage = (TextView) popupView.findViewById(R.id.tv_language);
+        btnLanguage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                }
+        });
+
+
+//        tvAbout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
+
         SharedPreferences shared = getSharedPreferences("SWITCH", Context.MODE_PRIVATE);
         final SharedPreferences.Editor edit = shared.edit();
         final boolean swBoolean = shared.getBoolean("SWITCH_TRUE", false);
@@ -221,19 +255,111 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.tv_language:{
-                Log.i("ssssssssssssss", "tv_language");
+                LayoutInflater inflater = getLayoutInflater();
+                View dialogLayout = inflater.inflate(R.layout.languages, null);
+                final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(HomeActivity.this);
+                dialogBuilder.setView(dialogLayout);
+                dialog = dialogBuilder.create();
+                dialog.show();
+
+                Button btnOk = (Button) dialogLayout.findViewById(R.id.btn_confirm);
+                final RadioGroup rgLanguage = (RadioGroup) dialogLayout.findViewById(R.id.language_group);
+                RadioButton rbEnglish = (RadioButton) dialogLayout.findViewById(R.id.rb_english);
+                RadioButton rbArmenian = (RadioButton) dialogLayout.findViewById(R.id.rb_armenian);
+                RadioButton rbSpanish = (RadioButton) dialogLayout.findViewById(R.id.rb_spanish);
+                RadioButton rbGermany = (RadioButton) dialogLayout.findViewById(R.id.rb_german);
+                RadioButton rbRussian = (RadioButton) dialogLayout.findViewById(R.id.rb_russian);
+
+                String language = shared.getString(Constants.DEFAULT_LANGUAGE, "");
+                switch (language) {
+                    case "en": {
+                        rbEnglish.setChecked(true);
+                        break;
+                    }
+                    case "ru": {
+                        rbRussian.setChecked(true);
+                        break;
+                    }
+                    case "hy": {
+                        rbArmenian.setChecked(true);
+                        break;
+                    }
+                    case "de": {
+                        rbGermany.setChecked(true);
+                        break;
+                    }
+                    case "es": {
+                        rbSpanish.setChecked(true);
+                        break;
+                    }
+                }
+
+                btnOk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int cheked = rgLanguage.getCheckedRadioButtonId();
+                        switch (cheked) {
+                            case R.id.rb_english: {
+                                Locale english = new Locale("en");
+                                changeLocale(english);
+                                break;
+                            }
+                            case R.id.rb_armenian: {
+                                Locale armenian = new Locale("hy");
+                                changeLocale(armenian);
+                                break;
+                            }
+                            case R.id.rb_spanish: {
+                                Locale spanish = new Locale("es");
+                                changeLocale(spanish);
+                                break;
+                            }
+                            case R.id.rb_german: {
+                                Locale german = new Locale("de");
+                                changeLocale(german);
+                                break;
+                            }
+                            case R.id.rb_russian: {
+                                Locale russian = new Locale("ru");
+                                changeLocale(russian);
+                                break;
+                            }
+                        }
+                        shared.edit().putString(Constants.DEFAULT_LANGUAGE, Locale.getDefault().getLanguage()).apply();
+                        Toast.makeText(HomeActivity.this, shared.getString(Constants.DEFAULT_LANGUAGE, ""), Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    private void changeLocale(Locale language) {
+                        Locale.setDefault(language);
+                        Configuration config = new Configuration();
+                        config.locale = language;
+                        getBaseContext().getResources().updateConfiguration(config,
+                                getBaseContext().getResources().getDisplayMetrics());
+                        Intent intent = getIntent();
+                        finish();
+                        startActivity(intent);
+                        dialog.dismiss();
+                    }
+
+                });
+
                 break;
             }
-            case R.id.tv_rating:{
+            case R.id.tv_rating: {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.container, RatingFragment.newInstance()).commit();
                 break;
             }
-            case R.id.tv_about:{
+            case R.id.tv_about: {
+                FragmentManager manager = getSupportFragmentManager();
+                manager.beginTransaction().replace(R.id.container, AboutFragment.newInstance())
+                        .addToBackStack(null).commit();
                 break;
             }
         }
     }
+
 }
