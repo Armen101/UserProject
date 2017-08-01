@@ -14,7 +14,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,7 +35,6 @@ import com.example.student.userproject.fragment.FavoriteFragment;
 import com.example.student.userproject.fragment.MapFragment;
 import com.example.student.userproject.fragment.PhotographDetailInfoFragment;
 import com.example.student.userproject.fragment.PostFragment;
-import com.example.student.userproject.fragment.RatingFragment;
 import com.example.student.userproject.service.LocationService;
 import com.example.student.userproject.utility.Constants;
 import com.example.student.userproject.utility.FavoritAdapterHelper;
@@ -349,8 +347,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.tv_rating: {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, RatingFragment.newInstance()).commit();
+//                getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.container, RatingFragment.newInstance()).commit();
                 break;
             }
             case R.id.tv_about: {
