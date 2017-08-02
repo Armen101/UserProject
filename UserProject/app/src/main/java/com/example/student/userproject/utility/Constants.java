@@ -12,5 +12,11 @@ public class Constants {
     public static final String TAG_POSTS = "POSTS_FRAGMENT";
     public static final String TAG_FAVORITE = "FAVORITE_FRAGMENT";
     public static final String DEFAULT_LANGUAGE = "defaultLanguage";
+    public static final String RATING_UID = "rating_uid";
+    public static final String R_UID1 = "uid1";
+    public static final String R_UID2 = "uid2";
+    public static final String R_UID3 = "uid3";
+    public static final String R_UID4 = "uid4";
+    public static final String R_UID5 = "uid5";
 
 }

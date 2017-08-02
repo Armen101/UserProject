@@ -22,6 +22,12 @@ public class PhotographInfo {
     public PhotographInfo() {
     }
 
+    public PhotographInfo(String name, String avatarUri, int rating){
+        this.name = name;
+        this.avatarUri = avatarUri;
+        this.rating = rating;
+    }
+
     public PhotographInfo(String name, String email, String address, String camera_info,
                           String imageUri, String avatarUri, String title, String uid,
                           int rating, double latitude, double longitude) {
