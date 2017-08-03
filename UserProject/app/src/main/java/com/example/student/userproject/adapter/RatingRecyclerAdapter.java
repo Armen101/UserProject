@@ -1,6 +1,7 @@
 package com.example.student.userproject.adapter;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,14 +20,28 @@ public class RatingRecyclerAdapter extends RecyclerView.Adapter<RatingRecyclerAd
 
     private List<PhotographInfo> list;
     private Context context;
+    private Fragment usageFragment;
+    private OnItemClickRating mListener;
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        if(mListener != null){
+            mListener = null;
+        }
+    }
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
+        if(mListener == null){
+            mListener = (RatingRecyclerAdapter.OnItemClickRating) usageFragment;
+        }
     }
 
-    public RatingRecyclerAdapter(List<PhotographInfo> list, Context context) {
+    public RatingRecyclerAdapter(List<PhotographInfo> list, Fragment usageFragment, Context context) {
         this.list = list;
+        this.usageFragment = usageFragment;
         this.context = context;
     }
 
@@ -44,6 +59,12 @@ public class RatingRecyclerAdapter extends RecyclerView.Adapter<RatingRecyclerAd
         Glide.with(context)
                 .load(list.get(position).getAvatarUri())
                 .into(holder.avatarRating);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               mListener.getModelR(list.get(position));
+            }
+        });
     }
 
     @Override
@@ -64,5 +85,8 @@ public class RatingRecyclerAdapter extends RecyclerView.Adapter<RatingRecyclerAd
             avatarRating = (ImageView) itemView.findViewById(R.id.avatar_rating);
             countRating = (RatingBar) itemView.findViewById(R.id.rb_rating_count);
         }
+    }
+    public interface OnItemClickRating{
+        void getModelR(PhotographInfo model);
     }
 }
