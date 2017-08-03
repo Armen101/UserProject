@@ -15,14 +15,14 @@ public class PhotographInfo {
     private String avatarUri;
     private String title;
     private String uid;
-    private int rating;
+    private long rating;
     private double latitude;
     private double longitude;
 
     public PhotographInfo() {
     }
 
-    public PhotographInfo(String name, String avatarUri, int rating){
+    public PhotographInfo(String name, String avatarUri, long rating){
         this.name = name;
         this.avatarUri = avatarUri;
         this.rating = rating;
@@ -30,7 +30,7 @@ public class PhotographInfo {
 
     public PhotographInfo(String name, String email, String address, String camera_info,
                           String imageUri, String avatarUri, String title, String uid,
-                          int rating, double latitude, double longitude) {
+                          long rating, double latitude, double longitude) {
         this.name = name;
         this.email = email;
         this.address = address;
@@ -60,11 +60,11 @@ public class PhotographInfo {
         this.email = email;
     }
 
-    public int getRating() {
+    public long getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(long rating) {
         this.rating = rating;
     }
 

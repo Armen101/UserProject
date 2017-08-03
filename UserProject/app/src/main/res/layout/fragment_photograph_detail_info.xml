@@ -128,7 +128,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:isIndicator="true"
-        android:stepSize="0.1"
+        android:stepSize="0.05"
         android:theme="@style/RatingBar" />
 
     <FrameLayout

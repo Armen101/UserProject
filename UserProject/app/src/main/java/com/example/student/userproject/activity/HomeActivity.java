@@ -188,7 +188,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    public void showPopup(final View v) {
+    public void showPopup(View v) {
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View popupView = layoutInflater.inflate(R.layout.popup_menu, null);
 
@@ -205,12 +205,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private void findViewPopup(View popupView) {
         tvAbout = (TextView) popupView.findViewById(R.id.tv_about);
-        btnLanguage = (TextView) popupView.findViewById(R.id.tv_language);
-        btnLanguage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                }
-        });
+//        btnLanguage = (TextView) popupView.findViewById(R.id.tv_language);
+//        btnLanguage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                }
+//        });
 
 
 //        tvAbout.setOnClickListener(new View.OnClickListener() {

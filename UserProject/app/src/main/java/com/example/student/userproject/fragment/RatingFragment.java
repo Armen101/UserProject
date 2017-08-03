@@ -3,10 +3,10 @@ package com.example.student.userproject.fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,49 +34,56 @@ import static com.example.student.userproject.utility.Constants.R_UID5;
 public class RatingFragment extends Fragment {
 
     private List<PhotographInfo> ratingList;
-    private String uid1;
-    private String uid2;
-    private String uid3;
-    private String uid4;
-    private String uid5;
-    private PhotographInfo info;
-
+    private String uid[] = new String[5];
 
     public RatingFragment() {
-        // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(RATING_UID, Context.MODE_PRIVATE);
-        uid1 = sharedPreferences.getString(R_UID1, "");
-        uid2 = sharedPreferences.getString(R_UID2, "");
-        uid3 = sharedPreferences.getString(R_UID3, "");
-        uid4 = sharedPreferences.getString(R_UID4, "");
-        uid5 = sharedPreferences.getString(R_UID5, "");
+        sharedUid();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_rating, container, false);
-        RecyclerView ratingRecyclerView = (RecyclerView) rootView.findViewById(R.id.rating_recycler_view);
+
+        ratingList = new ArrayList<>();
+        final RecyclerView ratingRecyclerView = getRecyclerView(rootView);
+        ratingUid(ratingRecyclerView);
+        return rootView;
+    }
+
+    @NonNull
+    private RecyclerView getRecyclerView(View rootView) {
+        final RecyclerView ratingRecyclerView = (RecyclerView) rootView.findViewById(R.id.rating_recycler_view);
         LinearLayoutManager rlm = new LinearLayoutManager(getActivity());
         ratingRecyclerView.setLayoutManager(rlm);
         ratingRecyclerView.setHasFixedSize(true);
+        return ratingRecyclerView;
+    }
+
+    private void sharedUid() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(RATING_UID, Context.MODE_PRIVATE);
+        uid[0] = sharedPreferences.getString(R_UID1, "");
+        uid[1] = sharedPreferences.getString(R_UID2, "");
+        uid[2] = sharedPreferences.getString(R_UID3, "");
+        uid[3] = sharedPreferences.getString(R_UID4, "");
+        uid[4] = sharedPreferences.getString(R_UID5, "");
+    }
+
+    private void ratingUid(final RecyclerView ratingRecyclerView) {
         DatabaseReference rDatabaseReference = FirebaseDatabase.getInstance().getReference().child(PHOTOGRAPHS);
-        ratingList = new ArrayList<>();
-
-
-        rDatabaseReference.child(uid1).addValueEventListener(new ValueEventListener() {
+        rDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
-                info = dataSnapshot.getValue(PhotographInfo.class);
-                Log.i("sssssssssssssss",info.getName());
-                Log.i("sssssssssssssss", String.valueOf(info.getRating()));
-                Log.i("sssssssssssssss",info.getAvatarUri());
+                for (int i = 0; i < 5; i++) {
+                    PhotographInfo photographInfo = dataSnapshot.child(uid[i]).getValue(PhotographInfo.class);
+                    if (ratingList.size() < 5) ratingList.add(photographInfo);
+                }
+                ratingRecyclerView.setAdapter(new RatingRecyclerAdapter(ratingList, getActivity()));
             }
 
             @Override
@@ -84,8 +91,5 @@ public class RatingFragment extends Fragment {
 
             }
         });
-
-        ratingRecyclerView.setAdapter(new RatingRecyclerAdapter(ratingList, getActivity()));
-        return rootView;
     }
 }

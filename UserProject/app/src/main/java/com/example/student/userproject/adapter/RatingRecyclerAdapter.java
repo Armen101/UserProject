@@ -33,17 +33,14 @@ public class RatingRecyclerAdapter extends RecyclerView.Adapter<RatingRecyclerAd
     @Override
     public RatingRecyclerAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_row_rating, parent, false);
-
         return new RatingRecyclerAdapter.MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(RatingRecyclerAdapter.MyViewHolder holder, final int position) {
-
         holder.tvRatingName.setText(list.get(position).getName());
-//                viewHolder.tvRatingRating.setText(model.getRating());
-        holder.countRating.setProgress(list.get(position).getRating());
-//
+        holder.tvRatingRating.setText("Rating ".concat(String.valueOf(list.get(position).getRating())));
+        holder.countRating.setProgress((int) list.get(position).getRating());
         Glide.with(context)
                 .load(list.get(position).getAvatarUri())
                 .into(holder.avatarRating);

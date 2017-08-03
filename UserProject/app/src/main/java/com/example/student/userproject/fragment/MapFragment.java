@@ -50,12 +50,12 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+import static com.example.student.userproject.utility.Constants.DISTANCE;
+import static com.example.student.userproject.utility.Constants.MAP_ANIMATION_DURATION;
+import static com.example.student.userproject.utility.Constants.MAP_RADAR_ANIMATION_DURATION;
+import static com.example.student.userproject.utility.Constants.ZOOM_NUMBER;
 
-    private static final float ZOOM_NUMBER = 13;
-    private static final int MAP_ANIMATION_DURATION = 2000;
-    private static float DISTANCE = 5000;
-    private static final long MAP_RADAR_ANIMATION_DURATION = 12000;
+public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private DatabaseReference mDatabaseRef;
     private List<PhotographInfo> photograpsList;
@@ -202,7 +202,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     getAllPhotographsNearly();
                     dialog.dismiss();
                 }
-
             }
         });
 

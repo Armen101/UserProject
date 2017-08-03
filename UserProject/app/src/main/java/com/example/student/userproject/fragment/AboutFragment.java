@@ -21,24 +21,17 @@ import java.util.List;
 
 public class AboutFragment extends Fragment {
 
-    private ImageView imgLogo;
-    private TextView tvOwner;
-    private TextView tvOwnerName;
-    private TextView tvMembers;
     private RecyclerView myRecycler;
     private List<AboutModel> aboutModelList;
     private TextView tvInfo;
-    private TextView tvAboutApp;
 
     public AboutFragment() {
     }
-
 
     public static AboutFragment newInstance() {
 
         return new AboutFragment();
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,18 +39,11 @@ public class AboutFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_about, container, false);
 
-        imgLogo = (ImageView) rootView.findViewById(R.id.img_logo);
-        tvOwner = (TextView) rootView.findViewById(R.id.tv_owner);
-        tvOwnerName = (TextView) rootView.findViewById(R.id.tv_owner_name_surname);
-        tvMembers = (TextView) rootView.findViewById(R.id.tv_members);
-        tvInfo = (TextView) rootView.findViewById(R.id.vtc_and_team);
-        tvAboutApp = (TextView) rootView.findViewById(R.id.about_app);
-
+        findViewById(rootView);
         tvInfo.setMovementMethod(LinkMovementMethod.getInstance());
         String text = "<a href='http://vtc.am/am/'> @2017 VTC Android team   " +
                 "http://vtc.am </a>";
         tvInfo.setText(Html.fromHtml(text));
-
 
 //        tvInfo.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -67,18 +53,23 @@ public class AboutFragment extends Fragment {
 //            }
 //        });
 
-
-
         aboutModelList = new ArrayList<>();
-
-        myRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_about);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         myRecycler.setLayoutManager(mLayoutManager);
         myRecycler.setHasFixedSize(true);
         myRecycler.setAdapter(new AboutRecyclerAdapter(aboutModelList, getActivity()));
         prepareAboutData();
-
         return rootView;
+    }
+
+    private void findViewById(View rootView) {
+        ImageView imgLogo = (ImageView) rootView.findViewById(R.id.img_logo);
+        TextView tvOwner = (TextView) rootView.findViewById(R.id.tv_owner);
+        TextView tvOwnerName = (TextView) rootView.findViewById(R.id.tv_owner_name_surname);
+        TextView tvMembers = (TextView) rootView.findViewById(R.id.tv_members);
+        tvInfo = (TextView) rootView.findViewById(R.id.vtc_and_team);
+        TextView tvAboutApp = (TextView) rootView.findViewById(R.id.about_app);
+        myRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_about);
     }
 
     private void prepareAboutData() {
@@ -102,8 +93,5 @@ public class AboutFragment extends Fragment {
         aboutModelList.add(modelArman);
         AboutModel modelAnna = new AboutModel("", "Anna Hovhannisyan");
         aboutModelList.add(modelAnna);
-
-
     }
-
 }

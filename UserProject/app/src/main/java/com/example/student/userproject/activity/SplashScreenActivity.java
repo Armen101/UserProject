@@ -36,14 +36,11 @@ import static com.example.student.userproject.utility.Constants.R_UID3;
 import static com.example.student.userproject.utility.Constants.R_UID4;
 import static com.example.student.userproject.utility.Constants.R_UID5;
 
-
 public class SplashScreenActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabaseRef;
     private PhotographInfo info;
-
     private Map<String, Long> photographersRatings = new HashMap<>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,9 +99,8 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     info = postSnapshot.getValue(PhotographInfo.class);
-                    photographersRatings.put(info.getUid(), Long.valueOf(info.getRating()));
+                    photographersRatings.put(info.getUid(), info.getRating());
                 }
-
                 sortedRating();
             }
 
@@ -113,10 +109,10 @@ public class SplashScreenActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
     private void sortedRating() {
+        String uid[] = new String[5];
         Set<Entry<String, Long>> set = photographersRatings.entrySet();
         List<Entry<String, Long>> list = new ArrayList<Entry<String, Long>>(set);
         Collections.sort(list, new Comparator<Entry<String, Long>>() {
@@ -126,16 +122,14 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
         });
 
-        SharedPreferences ratingShared = getSharedPreferences(RATING_UID,MODE_PRIVATE);
-        String uid1 = list.get(0).toString().substring(0,28);
-        String uid2 = list.get(1).toString().substring(0,28);
-        String uid3 = list.get(2).toString().substring(0,28);
-        String uid4 = list.get(3).toString().substring(0,28);
-        String uid5 = list.get(4).toString().substring(0,28);
-        ratingShared.edit().putString(R_UID1,uid1).apply();
-        ratingShared.edit().putString(R_UID2,uid2).apply();
-        ratingShared.edit().putString(R_UID3,uid3).apply();
-        ratingShared.edit().putString(R_UID4,uid4).apply();
-        ratingShared.edit().putString(R_UID5,uid5).apply();
+        SharedPreferences ratingShared = getSharedPreferences(RATING_UID, MODE_PRIVATE);
+        for (int i = 0; i < 5; i++) {
+            uid[i] = list.get(i).toString().substring(0, 28);
+            ratingShared.edit().putString(R_UID1, uid[0]).apply();
+            ratingShared.edit().putString(R_UID2, uid[1]).apply();
+            ratingShared.edit().putString(R_UID3, uid[2]).apply();
+            ratingShared.edit().putString(R_UID4, uid[3]).apply();
+            ratingShared.edit().putString(R_UID5, uid[4]).apply();
+        }
     }
 }

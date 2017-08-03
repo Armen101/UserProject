@@ -4,12 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -155,7 +151,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
         detailEmail.setText(photographInfo.getEmail());
         detailAddress.setText(photographInfo.getAddress());
         uid = photographInfo.getUid();
-        ratingBar.setProgress(photographInfo.getRating());
+        ratingBar.setProgress((int) photographInfo.getRating());
         Glide.with(getActivity())
                 .load(photographInfo.getAvatarUri())
                 .into(detailAvatar);

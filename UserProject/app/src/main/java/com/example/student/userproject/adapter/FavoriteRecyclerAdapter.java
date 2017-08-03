@@ -15,7 +15,6 @@ import com.example.student.userproject.model.PhotographInfo;
 
 import java.util.List;
 
-
 public class FavoriteRecyclerAdapter extends RecyclerView.Adapter<FavoriteRecyclerAdapter.MyViewHolder>{
 
     private List<PhotographInfo> list;
@@ -48,7 +47,6 @@ public class FavoriteRecyclerAdapter extends RecyclerView.Adapter<FavoriteRecycl
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_row_item, parent, false);
-
         return new MyViewHolder(itemView);
     }
 
@@ -78,7 +76,6 @@ public class FavoriteRecyclerAdapter extends RecyclerView.Adapter<FavoriteRecycl
     static class MyViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvPhone;
         private final ImageView imgAvatar;
-
         private TextView tvName;
 
         MyViewHolder(View view) {
