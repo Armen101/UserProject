@@ -22,6 +22,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arsy.maps_library.MapRipple;
@@ -78,7 +80,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private SharedPreferences orderOkey;
     private SharedPreferences shared;
     private String uid;
-    private EditText etText;
+    private TextView etText;
     private Button btnOk;
     private FloatingActionButton btnSettingsMap;
 
@@ -183,26 +185,40 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         builder.setView(view);
         final AlertDialog dialog = builder.create();
         dialog.show();
-        etText = (EditText) view.findViewById(R.id.et_text_update_radius);
+        etText = (TextView) view.findViewById(R.id.et_text_update_radius);
+        SeekBar seekBar = (SeekBar) view.findViewById(R.id.seekBar);
+        seekBar.setProgress(10);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                etText.setText(String.valueOf(seekBar.getProgress()));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
         btnOk = (Button) view.findViewById(R.id.btn_update_radius);
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (etText.length() >= 9) {
-                    Toast.makeText(getActivity(), "Too bigger number", Toast.LENGTH_SHORT).show();
-                }
-                if (etText == null) {
-                    Toast.makeText(getActivity(), "Please enter number", Toast.LENGTH_SHORT).show();
-                }
-                int distance = Integer.parseInt(etText.getText().toString());
-                if (distance < 5000) {
-                    Toast.makeText(getContext(), "Enter the number bigger then 5000", Toast.LENGTH_SHORT).show();
+                int distance = 0;
+                if (etText.getText().length() == 0) {
+                    Toast.makeText(getActivity(), "Enter currently number", Toast.LENGTH_SHORT).show();
+                    return;
                 } else {
-                    DISTANCE = distance;
-                    //addCurrentMarker(currentLat, currentLng);
-                    getAllPhotographsNearly();
-                    dialog.dismiss();
+                    distance = 1000 * Integer.parseInt(etText.getText().toString());
                 }
+                DISTANCE = distance;
+                //addCurrentMarker(currentLat, currentLng);
+                getAllPhotographsNearly();
+                dialog.dismiss();
             }
         });
 
