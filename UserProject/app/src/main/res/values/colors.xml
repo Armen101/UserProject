@@ -12,6 +12,7 @@
     <color name="colorGrey">#b2b7b7</color>
     <color name="colorDarkGrey">#565959</color>
     <color name="colorGreyLight">#858989</color>
-
-
+    <color name="colorFAB1">#2196F3</color>
+    <color name="colorFAB2">#E040FB</color>
+    <color name="colorFAB3">#40f5fb</color>
 </resources>

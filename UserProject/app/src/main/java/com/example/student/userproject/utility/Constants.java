@@ -24,7 +24,6 @@ public class Constants {
 
     public static final float ZOOM_NUMBER = 13;
     public static final int MAP_ANIMATION_DURATION = 2000;
-    public static float DISTANCE = 5000;
     public static final long MAP_RADAR_ANIMATION_DURATION = 12000;
 
 }

@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.arsy.maps_library.MapRipple;
@@ -50,12 +51,13 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.student.userproject.utility.Constants.DISTANCE;
 import static com.example.student.userproject.utility.Constants.MAP_ANIMATION_DURATION;
 import static com.example.student.userproject.utility.Constants.MAP_RADAR_ANIMATION_DURATION;
 import static com.example.student.userproject.utility.Constants.ZOOM_NUMBER;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
+
+    public static float DISTANCE = 5000;
 
     private DatabaseReference mDatabaseRef;
     private List<PhotographInfo> photograpsList;
@@ -100,15 +102,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         mDatabaseRef = database.getReference().child(Constants.PHOTOGRAPHS);
-        btnSettingsMap = (FloatingActionButton) rootView.findViewById(R.id.btn_settings);
-        btnSettingsMap.setOnClickListener(new View.OnClickListener() {
+        ImageView btn = (ImageView) rootView.findViewById(R.id.img_settings);
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateRadius();
             }
         });
-        FirebaseDatabase dtabase = FirebaseDatabase.getInstance();
-        mDatabaseRef = dtabase.getReference().child(Constants.PHOTOGRAPHS);
+        mDatabaseRef = database.getReference().child(Constants.PHOTOGRAPHS);
         photograpsList = new ArrayList<>();
         orderOkey = getActivity().getSharedPreferences("NOTIFICATION_OK", Context.MODE_PRIVATE);
         orderOk = orderOkey.getBoolean("OK", false);
@@ -364,4 +365,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         }).start();
     }
+
 }
