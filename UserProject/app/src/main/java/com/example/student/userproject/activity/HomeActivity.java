@@ -1,6 +1,7 @@
 package com.example.student.userproject.activity;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +24,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
@@ -118,8 +120,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                     case R.id.action_post: {
+                        ProgressDialog progressDialog = new ProgressDialog(HomeActivity.this);
+                        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                        progressDialog.setMessage("loading");
+                        progressDialog.show();
                         selectedFragment = PostFragment.newInstance();
                         tag = TAG_POSTS;
+                        progressDialog.dismiss();
                         break;
                     }
                     case R.id.action_map: {
@@ -205,20 +212,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private void findViewPopup(View popupView) {
         tvAbout = (TextView) popupView.findViewById(R.id.tv_about);
-//        btnLanguage = (TextView) popupView.findViewById(R.id.tv_language);
-//        btnLanguage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                }
-//        });
-
-
-//        tvAbout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
 
         SharedPreferences shared = getSharedPreferences("SWITCH", Context.MODE_PRIVATE);
         final SharedPreferences.Editor edit = shared.edit();
@@ -256,6 +249,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_language:{
+
                 LayoutInflater inflater = getLayoutInflater();
                 View dialogLayout = inflater.inflate(R.layout.languages, null);
                 final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(HomeActivity.this);
@@ -348,8 +342,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.tv_rating: {
+                ProgressDialog progressDialog = new ProgressDialog(HomeActivity.this);
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setMessage("loading");
+                progressDialog.show();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.container, new RatingFragment()).commit();
+                progressDialog.dismiss();
                 break;
             }
             case R.id.tv_about: {
