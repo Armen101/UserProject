@@ -125,6 +125,7 @@ public class PhotographDetailInfoFragment extends Fragment implements View.OnCli
             @Override
             public void onPageSelected(int position) {
                 index = position;
+                Log.w("====m ","onpageselected");
             }
 
             @Override

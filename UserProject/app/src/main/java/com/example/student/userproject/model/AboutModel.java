@@ -1,22 +1,25 @@
 package com.example.student.userproject.model;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+
 public class AboutModel {
-    private String imgMember;
+    private Integer imgMember;
     private String tvMemberName;
 
     public AboutModel() {
     }
 
-    public AboutModel(String imgMember, String tvMemberName) {
+    public AboutModel(Integer imgMember, String tvMemberName) {
         this.imgMember = imgMember;
         this.tvMemberName = tvMemberName;
     }
 
-    public String getImgMember() {
+    public Integer getImgMember() {
         return imgMember;
     }
 
-    public void setImgMember(String imgMember) {
+    public void setImgMember(Integer imgMember) {
         this.imgMember = imgMember;
     }
 

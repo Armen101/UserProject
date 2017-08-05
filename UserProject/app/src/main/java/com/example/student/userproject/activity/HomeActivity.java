@@ -175,12 +175,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().findFragmentById(R.id.container) != null) {
             super.onBackPressed();
-            if (getSupportFragmentManager().findFragmentById(R.id.container) == null) {
-                finish();
-            }
-        }
     }
 
     @Override

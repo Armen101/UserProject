@@ -138,6 +138,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onDestroy() {
+        try {
+            FragmentTransaction ft = getActivity().getSupportFragmentManager()
+                    .beginTransaction();
+            ft.remove(fragmentMap);
+            ft.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (shared != null && orderOkey != null) {
             shared.edit().remove(uid).apply();
             orderOkey.edit().putBoolean("OK", false).apply();
@@ -148,19 +156,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
         if (mMap != null) mMap.clear();
         getActivity().stopService(serviceIntent);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        try {
-            FragmentTransaction ft = getActivity().getSupportFragmentManager()
-                    .beginTransaction();
-            ft.remove(fragmentMap);
-            ft.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void initMapRadar(LatLng currentPosition) {

@@ -15,6 +15,8 @@ import com.example.student.userproject.model.AboutModel;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class AboutRecyclerAdapter extends RecyclerView.Adapter<AboutRecyclerAdapter.MyViewHolder> {
 
     private List<AboutModel> aboutModelList;
@@ -39,7 +41,6 @@ public class AboutRecyclerAdapter extends RecyclerView.Adapter<AboutRecyclerAdap
         Glide.with(context)
                 .load(model.getImgMember())
                 .into(holder.imgMemberPhoto);
-
     }
 
     @Override
@@ -50,12 +51,12 @@ public class AboutRecyclerAdapter extends RecyclerView.Adapter<AboutRecyclerAdap
     static class MyViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView tvMemberNameSurname;
-        private final ImageView imgMemberPhoto;
+        private final CircleImageView imgMemberPhoto;
 
         MyViewHolder(View view) {
             super(view);
             tvMemberNameSurname = (TextView) view.findViewById(R.id.tv_member_name_surname);
-            imgMemberPhoto = (ImageView) view.findViewById(R.id.img_member_photo);
+            imgMemberPhoto = (CircleImageView) view.findViewById(R.id.img_member_photo);
         }
     }
 }
