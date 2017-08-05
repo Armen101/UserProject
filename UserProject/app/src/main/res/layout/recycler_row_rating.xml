@@ -13,11 +13,13 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/avatar_rating"
             android:layout_width="0dp"
             android:layout_height="100dp"
-            android:layout_weight="1" />
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_account_circle_black_24dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"

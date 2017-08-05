@@ -21,6 +21,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arsy.maps_library.MapRipple;
@@ -50,12 +53,13 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.student.userproject.utility.Constants.DISTANCE;
 import static com.example.student.userproject.utility.Constants.MAP_ANIMATION_DURATION;
 import static com.example.student.userproject.utility.Constants.MAP_RADAR_ANIMATION_DURATION;
 import static com.example.student.userproject.utility.Constants.ZOOM_NUMBER;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
+
+    public static float DISTANCE = 5000;
 
     private DatabaseReference mDatabaseRef;
     private List<PhotographInfo> photograpsList;
@@ -76,7 +80,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private SharedPreferences orderOkey;
     private SharedPreferences shared;
     private String uid;
-    private EditText etText;
+    private TextView etText;
     private Button btnOk;
     private FloatingActionButton btnSettingsMap;
 
@@ -100,15 +104,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         mDatabaseRef = database.getReference().child(Constants.PHOTOGRAPHS);
-        btnSettingsMap = (FloatingActionButton) rootView.findViewById(R.id.btn_settings);
-        btnSettingsMap.setOnClickListener(new View.OnClickListener() {
+        ImageView btn = (ImageView) rootView.findViewById(R.id.img_settings);
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateRadius();
             }
         });
-        FirebaseDatabase dtabase = FirebaseDatabase.getInstance();
-        mDatabaseRef = dtabase.getReference().child(Constants.PHOTOGRAPHS);
+        mDatabaseRef = database.getReference().child(Constants.PHOTOGRAPHS);
         photograpsList = new ArrayList<>();
         orderOkey = getActivity().getSharedPreferences("NOTIFICATION_OK", Context.MODE_PRIVATE);
         orderOk = orderOkey.getBoolean("OK", false);
@@ -177,26 +180,40 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         builder.setView(view);
         final AlertDialog dialog = builder.create();
         dialog.show();
-        etText = (EditText) view.findViewById(R.id.et_text_update_radius);
+        etText = (TextView) view.findViewById(R.id.et_text_update_radius);
+        SeekBar seekBar = (SeekBar) view.findViewById(R.id.seekBar);
+        seekBar.setProgress(10);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                etText.setText(String.valueOf(seekBar.getProgress()));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
         btnOk = (Button) view.findViewById(R.id.btn_update_radius);
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (etText.length() >= 9) {
-                    Toast.makeText(getActivity(), "Too bigger number", Toast.LENGTH_SHORT).show();
-                }
-                if (etText == null) {
-                    Toast.makeText(getActivity(), "Please enter number", Toast.LENGTH_SHORT).show();
-                }
-                int distance = Integer.parseInt(etText.getText().toString());
-                if (distance < 5000) {
-                    Toast.makeText(getContext(), "Enter the number bigger then 5000", Toast.LENGTH_SHORT).show();
+                int distance = 0;
+                if (etText.getText().length() == 0) {
+                    Toast.makeText(getActivity(), "Enter currently number", Toast.LENGTH_SHORT).show();
+                    return;
                 } else {
-                    DISTANCE = distance;
-                    //addCurrentMarker(currentLat, currentLng);
-                    getAllPhotographsNearly();
-                    dialog.dismiss();
+                    distance = 1000 * Integer.parseInt(etText.getText().toString());
                 }
+                DISTANCE = distance;
+                //addCurrentMarker(currentLat, currentLng);
+                getAllPhotographsNearly();
+                dialog.dismiss();
             }
         });
 
@@ -359,4 +376,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         }).start();
     }
+
 }

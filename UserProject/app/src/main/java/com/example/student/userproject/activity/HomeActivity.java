@@ -1,6 +1,7 @@
 package com.example.student.userproject.activity;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,15 +19,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.student.userproject.R;
@@ -39,6 +37,8 @@ import com.example.student.userproject.fragment.RatingFragment;
 import com.example.student.userproject.service.LocationService;
 import com.example.student.userproject.utility.Constants;
 import com.example.student.userproject.utility.FavoritAdapterHelper;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 
 import java.util.Locale;
 
@@ -52,28 +52,19 @@ import static com.example.student.userproject.utility.Constants.TAG_POSTS;
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String tag = TAG_MAP;
-    private PopupWindow popupWindow;
-    private TextView tvAbout;
-    private TextView btnLanguage;
     private AlertDialog dialog;
     private SharedPreferences shared;
+    private Boolean isFabOpen = false;
+    private FloatingActionMenu fam;
+    private FloatingActionButton fab1, fab2, fab3;
+    private Animation fab_open, fab_close, rotate_forward, rotate_backward;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        ImageView btn = (ImageView) findViewById(R.id.img_settings);
-
         shared = getSharedPreferences("localization", MODE_PRIVATE);
-
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPopup(v);
-            }
-        });
-
+        initFABMenu();
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("choco_cooky.ttf")
                 .build());
@@ -99,6 +90,17 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 .commit();
     }
 
+    private void initFABMenu() {
+        fam = (FloatingActionMenu) findViewById(R.id.fab_menu);
+        fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        fab3 = (FloatingActionButton) findViewById(R.id.fab3);
+        fam.setOnClickListener(this);
+        fab1.setOnClickListener(this);
+        fab2.setOnClickListener(this);
+        fab3.setOnClickListener(this);
+    }
+
     private void initBottomNavigationBar() {
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.navigation);
@@ -118,8 +120,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                     case R.id.action_post: {
+                        ProgressDialog progressDialog = new ProgressDialog(HomeActivity.this);
+                        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                        progressDialog.setMessage("loading");
+                        progressDialog.show();
                         selectedFragment = PostFragment.newInstance();
                         tag = TAG_POSTS;
+                        progressDialog.dismiss();
                         break;
                     }
                     case R.id.action_map: {
@@ -183,62 +190,22 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    public void showPopup(View v) {
-        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View popupView = layoutInflater.inflate(R.layout.popup_menu, null);
 
-        findViewPopup(popupView);
-
-        popupWindow = new PopupWindow(
-                popupView,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        popupWindow.setOutsideTouchable(true);
-        popupWindow.dismiss();
-        popupWindow.showAsDropDown(v);
-    }
-
+    // TODO avelacnel switchy (TRAFFIC)
     private void findViewPopup(View popupView) {
-        tvAbout = (TextView) popupView.findViewById(R.id.tv_about);
-//        btnLanguage = (TextView) popupView.findViewById(R.id.tv_language);
-//        btnLanguage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                }
-//        });
-
-
-//        tvAbout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
-
         SharedPreferences shared = getSharedPreferences("SWITCH", Context.MODE_PRIVATE);
         final SharedPreferences.Editor edit = shared.edit();
         final boolean swBoolean = shared.getBoolean("SWITCH_TRUE", false);
-
-        TextView tvLlanguage = (TextView) popupView.findViewById(R.id.tv_language);
-        TextView tvRating = (TextView) popupView.findViewById(R.id.tv_rating);
-        TextView tvAbout = (TextView) popupView.findViewById(R.id.tv_about);
         final Switch sw = (Switch) popupView.findViewById(R.id.mySwitch);
-
-        tvLlanguage.setOnClickListener(this);
-        tvRating.setOnClickListener(this);
-        tvAbout.setOnClickListener(this);
-
         sw.setChecked(swBoolean);
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 isChecked = swBoolean;
                 if (isChecked) {
-                    popupWindow.dismiss();
                     edit.putBoolean("SWITCH_TRUE", false);
                     edit.apply();
                 } else {
-                    popupWindow.dismiss();
                     LocationService.changeNetwork();
                     edit.putBoolean("SWITCH_TRUE", true);
                     edit.apply();
@@ -250,110 +217,125 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_language:{
+            case R.id.fab_menu: {
+                //animateFAB();
+                if (fam.isOpened()) {
+                    fam.close(true);
+                }
+                break;
+            }
+            case R.id.fab2: {
                 LayoutInflater inflater = getLayoutInflater();
                 View dialogLayout = inflater.inflate(R.layout.languages, null);
                 final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(HomeActivity.this);
                 dialogBuilder.setView(dialogLayout);
                 dialog = dialogBuilder.create();
                 dialog.show();
-
-                Button btnOk = (Button) dialogLayout.findViewById(R.id.btn_confirm);
-                final RadioGroup rgLanguage = (RadioGroup) dialogLayout.findViewById(R.id.language_group);
-                RadioButton rbEnglish = (RadioButton) dialogLayout.findViewById(R.id.rb_english);
-                RadioButton rbArmenian = (RadioButton) dialogLayout.findViewById(R.id.rb_armenian);
-                RadioButton rbSpanish = (RadioButton) dialogLayout.findViewById(R.id.rb_spanish);
-                RadioButton rbGermany = (RadioButton) dialogLayout.findViewById(R.id.rb_german);
-                RadioButton rbRussian = (RadioButton) dialogLayout.findViewById(R.id.rb_russian);
-
-                String language = shared.getString(Constants.DEFAULT_LANGUAGE, "");
-                switch (language) {
-                    case "en": {
-                        rbEnglish.setChecked(true);
-                        break;
-                    }
-                    case "ru": {
-                        rbRussian.setChecked(true);
-                        break;
-                    }
-                    case "hy": {
-                        rbArmenian.setChecked(true);
-                        break;
-                    }
-                    case "de": {
-                        rbGermany.setChecked(true);
-                        break;
-                    }
-                    case "es": {
-                        rbSpanish.setChecked(true);
-                        break;
-                    }
-                }
-
-                btnOk.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int cheked = rgLanguage.getCheckedRadioButtonId();
-                        switch (cheked) {
-                            case R.id.rb_english: {
-                                Locale english = new Locale("en");
-                                changeLocale(english);
-                                break;
-                            }
-                            case R.id.rb_armenian: {
-                                Locale armenian = new Locale("hy");
-                                changeLocale(armenian);
-                                break;
-                            }
-                            case R.id.rb_spanish: {
-                                Locale spanish = new Locale("es");
-                                changeLocale(spanish);
-                                break;
-                            }
-                            case R.id.rb_german: {
-                                Locale german = new Locale("de");
-                                changeLocale(german);
-                                break;
-                            }
-                            case R.id.rb_russian: {
-                                Locale russian = new Locale("ru");
-                                changeLocale(russian);
-                                break;
-                            }
-                        }
-                        shared.edit().putString(Constants.DEFAULT_LANGUAGE, Locale.getDefault().getLanguage()).apply();
-                        Toast.makeText(HomeActivity.this, shared.getString(Constants.DEFAULT_LANGUAGE, ""), Toast.LENGTH_SHORT).show();
-
-                    }
-
-                    private void changeLocale(Locale language) {
-                        Locale.setDefault(language);
-                        Configuration config = new Configuration();
-                        config.locale = language;
-                        getBaseContext().getResources().updateConfiguration(config,
-                                getBaseContext().getResources().getDisplayMetrics());
-                        Intent intent = getIntent();
-                        finish();
-                        startActivity(intent);
-                        dialog.dismiss();
-                    }
-
-                });
-
+                final RadioGroup rgLanguage = getRadioGroup(dialogLayout);
+                showLanguageDialog(dialogLayout, rgLanguage);
                 break;
             }
-            case R.id.tv_rating: {
+            case R.id.fab3: {
+                ProgressDialog progressDialog = new ProgressDialog(HomeActivity.this);
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setMessage("loading");
+                progressDialog.show();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.container, new RatingFragment()).commit();
+                progressDialog.dismiss();
                 break;
             }
-            case R.id.tv_about: {
+            case R.id.fab1: {
                 FragmentManager manager = getSupportFragmentManager();
                 manager.beginTransaction().replace(R.id.container, AboutFragment.newInstance())
                         .addToBackStack(null).commit();
                 break;
             }
         }
+    }
+
+    private void showLanguageDialog(View dialogLayout, final RadioGroup rgLanguage) {
+        Button btnOk = (Button) dialogLayout.findViewById(R.id.btn_confirm);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int cheked = rgLanguage.getCheckedRadioButtonId();
+                switch (cheked) {
+                    case R.id.rb_english: {
+                        Locale english = new Locale("en");
+                        changeLocale(english);
+                        break;
+                    }
+                    case R.id.rb_armenian: {
+                        Locale armenian = new Locale("hy");
+                        changeLocale(armenian);
+                        break;
+                    }
+                    case R.id.rb_spanish: {
+                        Locale spanish = new Locale("es");
+                        changeLocale(spanish);
+                        break;
+                    }
+                    case R.id.rb_german: {
+                        Locale german = new Locale("de");
+                        changeLocale(german);
+                        break;
+                    }
+                    case R.id.rb_russian: {
+                        Locale russian = new Locale("ru");
+                        changeLocale(russian);
+                        break;
+                    }
+                }
+                shared.edit().putString(Constants.DEFAULT_LANGUAGE, Locale.getDefault().getLanguage()).apply();
+                Toast.makeText(HomeActivity.this, shared.getString(Constants.DEFAULT_LANGUAGE, ""), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private RadioGroup getRadioGroup(View dialogLayout) {
+        final RadioGroup rgLanguage = (RadioGroup) dialogLayout.findViewById(R.id.language_group);
+        RadioButton rbEnglish = (RadioButton) dialogLayout.findViewById(R.id.rb_english);
+        RadioButton rbArmenian = (RadioButton) dialogLayout.findViewById(R.id.rb_armenian);
+        RadioButton rbSpanish = (RadioButton) dialogLayout.findViewById(R.id.rb_spanish);
+        RadioButton rbGermany = (RadioButton) dialogLayout.findViewById(R.id.rb_german);
+        RadioButton rbRussian = (RadioButton) dialogLayout.findViewById(R.id.rb_russian);
+        String language = shared.getString(Constants.DEFAULT_LANGUAGE, "");
+        switch (language) {
+            case "en": {
+                rbEnglish.setChecked(true);
+                break;
+            }
+            case "ru": {
+                rbRussian.setChecked(true);
+                break;
+            }
+            case "hy": {
+                rbArmenian.setChecked(true);
+                break;
+            }
+            case "de": {
+                rbGermany.setChecked(true);
+                break;
+            }
+            case "es": {
+                rbSpanish.setChecked(true);
+                break;
+            }
+        }
+        return rgLanguage;
+    }
+
+    private void changeLocale(Locale language) {
+        Locale.setDefault(language);
+        Configuration config = new Configuration();
+        config.locale = language;
+        getBaseContext().getResources().updateConfiguration(config,
+                getBaseContext().getResources().getDisplayMetrics());
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
+        dialog.dismiss();
     }
 
 }
