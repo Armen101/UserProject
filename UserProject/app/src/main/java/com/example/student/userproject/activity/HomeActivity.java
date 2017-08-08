@@ -135,32 +135,32 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     }
                 }
-                enableMenuItems(itemMap, itemPost, itemFavorite);
+//                enableMenuItems(itemMap, itemPost, itemFavorite);
                 initFirstFragment(selectedFragment, tag);
                 return true;
             }
         });
     }
 
-    private void enableMenuItems(MenuItem itemMap, MenuItem itemPost, MenuItem itemFavorite) {
-        if (tag.equals(TAG_MAP)) {
-            itemMap.setEnabled(false);
-        } else itemMap.setEnabled(true);
-
-        if (tag.equals(TAG_POSTS)) {
-            itemPost.setEnabled(false);
-        } else itemPost.setEnabled(true);
-
-        if (tag.equals(TAG_FAVORITE)) {
-            itemFavorite.setEnabled(false);
-        } else itemFavorite.setEnabled(true);
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag("DETAILS_FRAGMENT");
-        if (fragment instanceof PhotographDetailInfoFragment) {
-            itemMap.setEnabled(true);
-            itemPost.setEnabled(true);
-            itemFavorite.setEnabled(true);
-        }
-    }
+//    private void enableMenuItems(MenuItem itemMap, MenuItem itemPost, MenuItem itemFavorite) {
+//        if (tag.equals(TAG_MAP)) {
+//            itemMap.setEnabled(false);
+//        } else itemMap.setEnabled(true);
+//
+//        if (tag.equals(TAG_POSTS)) {
+//            itemPost.setEnabled(false);
+//        } else itemPost.setEnabled(true);
+//
+//        if (tag.equals(TAG_FAVORITE)) {
+//            itemFavorite.setEnabled(false);
+//        } else itemFavorite.setEnabled(true);
+//        Fragment fragment = getSupportFragmentManager().findFragmentByTag("DETAILS_FRAGMENT");
+//        if (fragment instanceof PhotographDetailInfoFragment) {
+//            itemMap.setEnabled(true);
+//            itemPost.setEnabled(true);
+//            itemFavorite.setEnabled(true);
+//        }
+//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -218,7 +218,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_menu: {
-                //animateFAB();
+//                animateFAB();
                 if (fam.isOpened()) {
                     fam.close(true);
                 }

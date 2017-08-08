@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_weight="0.5"
                 android:text="@string/owner"
-                android:textColor="#ffffff"
+                android:textColor="@color/colorWhite"
                 android:textSize="18sp" />
 
             <TextView
@@ -43,7 +43,7 @@
                 android:layout_weight="0.5"
                 android:layout_width="match_parent"
                 android:text="Tigran Vanyan"
-                android:textColor="#ffffff"
+                android:textColor="@color/colorWhite"
                 android:textSize="24sp" />
 
         </LinearLayout>
@@ -53,7 +53,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/color_favoritet" />
+        android:background="@color/color_favorite" />
 
     <TextView
         android:id="@+id/about_app"
@@ -61,13 +61,13 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:text="@string/about_app"
-        android:textColor="#ffffff"
+        android:textColor="@color/colorWhite"
         android:textSize="18sp" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/color_favoritet" />
+        android:background="@color/color_favorite" />
 
     <TextView
         android:id="@+id/vtc_and_team"
@@ -79,14 +79,14 @@
         android:linksClickable="true"
         android:padding="10dp"
         android:text="@string/_2017_vtc_android_team"
-        android:textColor="#ffffff"
+        android:textColor="@color/colorWhite"
         android:textColorLink="@color/color_link"
         android:textSize="18sp" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/color_favoritet" />
+        android:background="@color/color_favorite" />
 
     <TextView
         android:id="@+id/tv_members"
@@ -95,13 +95,13 @@
         android:layout_margin="10dp"
         android:gravity="center"
         android:text="@string/members"
-        android:textColor="#ffffff"
+        android:textColor="@color/colorWhite"
         android:textSize="24sp" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/color_favoritet"/>
+        android:background="@color/color_favorite"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_about"
@@ -114,6 +114,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/color_favoritet"/>
+        android:background="@color/color_favorite"/>
 
 </LinearLayout>

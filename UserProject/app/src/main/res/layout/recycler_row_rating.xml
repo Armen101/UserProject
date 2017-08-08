@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:layout_marginBottom="5dp"
-    app:cardBackgroundColor="@color/colorDarkGreen"
+    app:cardBackgroundColor="@color/cardview_shadow_start_color"
     app:cardCornerRadius="12dp">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
@@ -16,7 +16,7 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/avatar_rating"
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="80dp"
             android:layout_gravity="center"
             android:layout_weight="1"
             app:srcCompat="@drawable/ic_account_circle_black_24dp" />
@@ -40,6 +40,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:isIndicator="true"
+                android:scaleX="0.8"
+                android:scaleY="0.8"
                 android:stepSize="0.05"
                 android:theme="@style/RatingBar" />
 

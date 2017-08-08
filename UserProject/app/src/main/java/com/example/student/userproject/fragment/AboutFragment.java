@@ -1,8 +1,5 @@
 package com.example.student.userproject.fragment;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,7 +9,6 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.student.userproject.R;
@@ -48,14 +44,6 @@ public class AboutFragment extends Fragment {
                 "http://vtc.am </a>";
         tvInfo.setText(Html.fromHtml(text));
 
-//        tvInfo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent browser= new Intent(Intent.ACTION_VIEW, Uri.parse("http://vtc.am/am/"));
-//                startActivity(browser);
-//            }
-//        });
-
         aboutModelList = new ArrayList<>();
         prepareAboutData();
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
@@ -66,12 +54,7 @@ public class AboutFragment extends Fragment {
     }
 
     private void findViewById(View rootView) {
-        ImageView imgLogo = (ImageView) rootView.findViewById(R.id.img_logo);
-        TextView tvOwner = (TextView) rootView.findViewById(R.id.tv_owner);
-        TextView tvOwnerName = (TextView) rootView.findViewById(R.id.tv_owner_name_surname);
-        TextView tvMembers = (TextView) rootView.findViewById(R.id.tv_members);
         tvInfo = (TextView) rootView.findViewById(R.id.vtc_and_team);
-        TextView tvAboutApp = (TextView) rootView.findViewById(R.id.about_app);
         myRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_about);
     }
 

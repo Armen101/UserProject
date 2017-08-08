@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    app:cardBackgroundColor="@color/cardview_shadow_start_color">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,24 +29,6 @@
             android:layout_height="200dp"
             android:adjustViewBounds="true" />
 
-        <TextView
-            android:id="@+id/tv_post_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:textColor="@color/colorWhite"
-            android:textSize="20sp"
-            tools:text="@string/my_name" />
-
-        <TextView
-            android:id="@+id/tv_post_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:textColor="@color/colorWhite"
-            android:textSize="20sp"
-            tools:text="@string/data" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -54,6 +37,31 @@
             android:gravity="center_vertical|right"
             android:orientation="horizontal">
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_post_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20sp"
+                    tools:text="@string/my_name" />
+
+                <TextView
+                    android:id="@+id/tv_post_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20sp"
+                    tools:text="@string/data" />
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/img_like"
@@ -71,6 +79,5 @@
                 tools:text="@string/likes" />
 
         </LinearLayout>
-
     </LinearLayout>
 </android.support.v7.widget.CardView>

@@ -1,8 +1,5 @@
 package com.example.student.userproject.model;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-
 public class AboutModel {
     private Integer imgMember;
     private String tvMemberName;
