@@ -71,8 +71,8 @@ public class AboutFragment extends Fragment {
         aboutModelList.add(modelBabken);
         AboutModel modelTaron = new AboutModel(drawableToBitmap(R.drawable.taron_mkrtchyan), "Taron Mkrtchyan");
         aboutModelList.add(modelTaron);
-        AboutModel modelSeryan = new AboutModel(drawableToBitmap(R.drawable.seyran_alaverdyan), "Seyran Alavaerdyan");
-        aboutModelList.add(modelSeryan);
+        AboutModel modelSeyran = new AboutModel(drawableToBitmap(R.drawable.seyran_alaverdyan), "Seyran Alavaerdyan");
+        aboutModelList.add(modelSeyran);
         AboutModel modelArmen = new AboutModel(drawableToBitmap(R.drawable.armen_gevorgyan), "Armen Gevorgyan");
         aboutModelList.add(modelArmen);
         AboutModel modelArman = new AboutModel(drawableToBitmap(R.drawable.arman_vardanyan), "Arman Vardanyan");
