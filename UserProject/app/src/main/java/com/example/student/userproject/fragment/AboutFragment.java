@@ -1,8 +1,5 @@
 package com.example.student.userproject.fragment;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -48,14 +45,6 @@ public class AboutFragment extends Fragment {
                 "http://vtc.am </a>";
         tvInfo.setText(Html.fromHtml(text));
 
-//        tvInfo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent browser= new Intent(Intent.ACTION_VIEW, Uri.parse("http://vtc.am/am/"));
-//                startActivity(browser);
-//            }
-//        });
-
         aboutModelList = new ArrayList<>();
         prepareAboutData();
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
@@ -88,8 +77,8 @@ public class AboutFragment extends Fragment {
         aboutModelList.add(modelBabken);
         AboutModel modelTaron = new AboutModel(drawableToBitmap(R.drawable.taron_mkrtchyan), "Taron Mkrtchyan");
         aboutModelList.add(modelTaron);
-        AboutModel modelSeryan = new AboutModel(drawableToBitmap(R.drawable.seyran_alaverdyan), "Seyran Alavaerdyan");
-        aboutModelList.add(modelSeryan);
+        AboutModel modelSeyran = new AboutModel(drawableToBitmap(R.drawable.seyran_alaverdyan), "Seyran Alavaerdyan");
+        aboutModelList.add(modelSeyran);
         AboutModel modelArmen = new AboutModel(drawableToBitmap(R.drawable.armen_gevorgyan), "Armen Gevorgyan");
         aboutModelList.add(modelArmen);
         AboutModel modelArman = new AboutModel(drawableToBitmap(R.drawable.arman_vardanyan), "Arman Vardanyan");

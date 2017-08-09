@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">UserProject</string>
-    <string name="title_activity_home">սկզբնական աքտիվիթի</string>
+    <string name="title_activity_home">սկզբնական աքթիվիթի</string>
     <string name="title_home">սկիզբ</string>
     <string name="title_dashboard">ցուցատախտակ</string>
     <string name="title_notifications">ծանուցումներ</string>
@@ -25,7 +25,7 @@
     <string name="my_photo">նկար</string>
     <string name="my_name">անուն</string>
     <string name="data">ամսաթիվ</string>
-    <string name="likes">հավանվածներ</string>
+    <string name="likes">հավանել</string>
     <string name="map">քարտեզ</string>
     <string name="post">գրառում</string>
     <string name="favorite">նախընտրելի</string>
@@ -34,6 +34,12 @@
     <string name="my_about">մեր մասին</string>
     <string name="about_app"> Հավելվածը թույլ է տալիս որոնել և պատվիրել այն լուսանկարիչներին, ովքեր գտնվում են ձեր շրջակայքում:</string>
     <string name="owner">Սեփականատեր</string>
-    <string name="members">Անդամնեռ</string>
+    <string name="members">Անդամներ</string>
     <string name="_2017_vtc_android_team">\@2017 ՎՏԿ Անդրոիդ Թիմ</string>
+    <string name="english">անգլերեն</string>
+    <string name="armenain">հայերեն</string>
+    <string name="german">գերմաներեն</string>
+    <string name="spanish">իսպաներեն</string>
+    <string name="russian">ռուսերեն</string>
+    <string name="Rating">Վարկանիշ</string>
 </resources>
